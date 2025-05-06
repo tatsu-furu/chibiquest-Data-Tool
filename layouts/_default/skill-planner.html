@@ -1,0 +1,79 @@
+{{/* ファイルパス: /layouts/_default/skill-planner.html */}}
+{{ define "main" }}
+<main>
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Content }}</p>
+    <hr>
+
+    {{/* UI要素を配置するコンテナ */}}
+    <div class="skill-planner-container"> {{/* ← CSSで調整するためのクラス */}}
+
+        {{/* --- 1. スキル入力セクション --- */}}
+        <section class="tool-section">
+            <h2>1. スキル選択</h2>
+            <div id="desired-skills-section" style="margin-bottom: 1.5em;">
+                <h3>保持したいスキル (複数可)</h3>
+                {{/* --- ▼▼▼ スキル検索ボックス追加 ▼▼▼ --- */}}
+                <input type="text" id="desired-skill-filter" placeholder="スキル名で検索..." style="width: 95%; margin-bottom: 5px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+                {{/* --- ▲▲▲ スキル検索ボックス追加 ▲▲▲ --- */}}
+                <div id="desired-skill-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #eee; padding: 5px;">
+                    <p>(スキルリスト表示エリア)</p>
+                </div>
+            </div>
+            <div id="current-skills-section">
+                 {{/* h3 に スキル数を表示するspanを追加 */}}
+                <h3>現在保持しているスキル (<span id="current-skill-count">0</span>/10個)</h3>
+                {{/* --- ▼▼▼ スキル検索ボックス追加 ▼▼▼ --- */}}
+                <input type="text" id="current-skill-filter" placeholder="スキル名で検索..." style="width: 95%; margin-bottom: 5px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+                {{/* --- ▲▲▲ スキル検索ボックス追加 ▲▲▲ --- */}}
+                <div id="current-skill-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #eee; padding: 5px;">
+                     <p>(現在スキル表示・選択エリア)</p>
+                </div>
+                 <small>※ブラウザに保存されます</small>
+            </div>
+        </section>
+
+        {{/* --- 2. 職業入力セクション --- */}}
+        <section class="tool-section">
+            <h2>2. 職業状況</h2>
+             <div id="mastered-jobs-section-sp" style="margin-bottom: 1.5em;">
+                <h3>マスター済み職業</h3>
+                 <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                    <select id="sp-mastered-rank-filter"><option value="">職階</option>{{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}</select>
+                    <input type="text" id="sp-mastered-job-filter" placeholder="名前検索..." style="flex-grow: 1;">
+                 </div>
+                 <div style="margin-bottom: 5px;"><button id="sp-mastered-check-all">全選択</button> <button id="sp-mastered-uncheck-all">全解除</button></div>
+                <div id="sp-mastered-job-list" style="max-height: 150px; overflow-y: auto;"><p>(マスター済みリスト)</p></div>
+                 <small>※計算ツールと共通のデータを使用</small>
+            </div>
+             <div id="target-jobs-section-sp">
+                <h3>目標とする職業 (複数可)</h3>
+                 <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                    <select id="sp-target-rank-filter"><option value="">職階</option>{{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}</select>
+                    <input type="text" id="sp-target-job-filter" placeholder="名前検索..." style="flex-grow: 1;">
+                 </div>
+                <div id="sp-target-job-list" style="max-height: 150px; overflow-y: auto;"><p>(目標リスト)</p></div>
+            </div>
+        </section>
+
+        {{/* --- 3. シミュレーション実行・結果表示 --- */}}
+        <section class="tool-section">
+            <h2>3. シミュレーション実行と結果</h2>
+            <button id="skill-simulate-button" style="padding: 10px 15px; font-size: 16px;">シミュレーション実行</button>
+            <div id="skill-timeline-output" style="margin-top: 1em; border-top: 1px solid #eee; padding-top: 1em;">
+                <p>ここにスキル習得順序や警告が表示されます。</p>
+            </div>
+        </section>
+
+    </div>
+
+    {{/* --- データ埋め込み & 新しいJSファイルを読み込む --- */}}
+    <script>
+      const jsonString = `{{ .Site.Data.jobs | jsonify }}`;
+      var allJobData = []; var jobDataMap = new Map();
+      try { allJobData = JSON.parse(jsonString); if (Array.isArray(allJobData)) { allJobData.forEach(job => { const n=job['職業の名前']; if(n){jobDataMap.set(n,job);}});}} catch(e) {console.error("JSON parse error:",e);}
+    </script>
+    <script src="/js/skill-planner.js" defer></script>
+
+</main>
+{{ end }}
