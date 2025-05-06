@@ -1,0 +1,91 @@
+{{/* ファイルパス: layouts/_default/list.html */}}
+{{ define "main" }}
+<main>
+    <h1>職業データベース</h1>
+    <p></p>
+
+    <style>
+        /* 簡単なテーブル整形用CSS (後でちゃんとしたCSSファイルに移動推奨) */
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        thead { background-color: #f2f2f2; }
+    </style>
+
+    <table id="job-table">
+        <thead>
+            <tr>
+                <th>ｎ次職<br>(0=アイテム)</th>
+                <th>名前</th>
+                <th>前提 or アイテム</th>
+                <th>マスターLV</th>
+                <th>HP</th>
+                <th>MP</th>
+                <th>攻</th>
+                <th>魔</th>
+                <th>運</th>
+                <th>技</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{/* /data/jobs.json のデータを参照 */}}
+            {{ range .Site.Data.jobs }}
+            <tr>
+                {{/* .キー名 の代わりに index . "キー名" を使う */}}
+                <td>{{ index . "職階" }}</td>
+                <td>{{ index . "職業の名前" }}</td>
+                <td>{{ index . "前提/アイテム" }}</td>
+                <td>{{ index . "最大LV" }}</td>
+                <td>{{ index . "最大HPアップ" }}</td>
+                <td>{{ index . "最大MPアップ" }}</td>
+                <td>{{ index . "最大攻撃力アップ" }}</td>
+                <td>{{ index . "最大魔力アップ" }}</td>
+                <td>{{ index . "最大運アップ" }}</td>
+                <td>{{ index . "覚える技 (覚える職業LV)" }}</td>
+            </tr>
+            {{ else }}
+            <tr><td colspan="9">データが読み込めませんでした。/data/jobs.json を確認してください。</td></tr>
+            {{ end }}
+        </tbody>
+    </table>
+</main>
+{{/* --- ▼▼▼ DataTables 初期化スクリプト (DOMContentLoaded 版 + Debug) ▼▼▼ --- */}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // デバッグメッセージ 1: DOMの準備ができたことを確認
+    console.log('DOM fully loaded and parsed');
+
+    // デバッグメッセージ 2: jQueryが利用可能か確認
+    if (typeof jQuery !== 'undefined') {
+        console.log('jQuery is available:', jQuery.fn.jquery); // jQueryのバージョン表示
+
+        const tableElement = jQuery('#job-table');
+
+        // デバッグメッセージ 3: テーブル要素が見つかったか確認
+        console.log('Table #job-table found:', tableElement.length); // 1ならOK
+
+        if (tableElement.length > 0) {
+            try {
+                // DataTablesを初期化
+                tableElement.DataTable({
+                    // ここに言語設定などのオプションを追加可能
+                    // language: { url: "//cdn.datatables.net/plug-ins/2.0.8/i18n/ja.json" }
+                });
+                // デバッグメッセージ 4: DataTables初期化が試みられたことを確認
+                console.log('DataTable initialized successfully.');
+            } catch (e) {
+                // もしDataTables初期化でエラーが出たら表示
+                console.error('Error initializing DataTable:', e);
+            }
+        } else {
+            console.error('Table with ID #job-table was not found in the DOM.');
+        }
+    } else {
+        // jQueryが利用できない場合のエラー
+        console.error('jQuery is not available when DOMContentLoaded fired.');
+    }
+});
+</script>
+{{/* --- ▲▲▲ DataTables 初期化スクリプト (DOMContentLoaded 版 + Debug) ▲▲▲ --- */}}
+{{/* ここに DataTables.js などのライブラリ読み込みを追加可能 */}}
+
+{{ end }}

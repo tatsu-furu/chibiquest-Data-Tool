@@ -1,0 +1,326 @@
+// ファイルパス: /assets/scss/main.scss (改良版)
+
+// --- Google Font を読み込み ---
+// 例: M PLUS Rounded 1c (丸みのあるフォント) と DotGothic16 (ドットフォント)
+// DotGothic16は必要なければ削除してもOK
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=DotGothic16&display=swap');
+
+// --- 色の変数を定義 ---
+$bg-color: #fdfaf4;      // 背景色 (クリーム)
+$text-color: #4a3f35;     // テキスト色 (濃い茶色)
+$primary-color: #8B4513;  // メインカラー (茶色 - SaddleBrown)
+$secondary-color: #DAA520; // アクセントカラー1 (金色 - GoldenRod)
+$accent-color: #5F9EA0;   // アクセントカラー2 (青緑 - CadetBlue)
+$border-color: #e0d8c0;   // 枠線の色 (薄い茶色)
+$table-header-bg: #f5deb3; // テーブルヘッダー背景 (小麦色 - Wheat)
+$list-bg: #fffaf0;        // リスト背景 (白に近いクリーム - FloralWhite)
+$button-text-color: $primary-color; // ボタンテキスト色 (茶色)
+$result-value-color: $accent-color; // 計算結果数値の色 (青緑)
+$footer-text-color: lighten($text-color, 30%); // フッター文字色
+$link-color: $accent-color; // リンク色
+$link-hover-color: darken($link-color, 15%); // リンクホバー色
+
+// --- 基本設定 ---
+body {
+    font-family: 'M PLUS Rounded 1c', sans-serif; // メインフォント指定
+    line-height: 1.6;
+    margin: 0 auto;
+    padding: 1em;
+    max-width: 1100px;
+    color: $text-color;
+    background-color: $bg-color;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    // font-family: 'DotGothic16', sans-serif; // 見出しにドットフォントを使う場合
+    color: $primary-color;
+    margin-top: 1.5em;
+    margin-bottom: 0.6em;
+    line-height: 1.3; // 見出しの行間調整
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+    transition: color 0.2s ease; // 色変化を滑らかに
+    &:hover {
+        text-decoration: underline;
+        color: $link-hover-color;
+    }
+}
+
+hr { // 区切り線
+    border: 0;
+    border-top: 1px solid $border-color;
+    margin: 2em 0;
+}
+
+// --- ヘッダー & フッター ---
+header, footer {
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid $border-color;
+}
+header {
+    h1 a {
+        color: $primary-color;
+        text-decoration: none;
+        &:hover {
+            text-decoration: none; // タイトルはホバー下線なし
+            color: darken($primary-color, 10%);
+        }
+    }
+    nav {
+        margin-top: 0.5em;
+        a {
+            margin-right: 15px; // ナビリンクの間隔
+            font-weight: bold;
+        }
+    }
+}
+footer {
+    margin-top: 3em;
+    padding-top: 1em;
+    border-top: 1px solid $border-color;
+    border-bottom: none; // フッターの下線は不要
+    font-size: 0.9em;
+    color: $footer-text-color;
+    text-align: center;
+}
+
+// --- テーブル (`/jobs/` ページ) ---
+#job-table { // DataTables適用テーブル
+    font-size: 0.9em;
+    margin-top: 1.5em;
+    border: 1px solid $border-color;
+}
+// DataTablesが生成するラッパー要素
+.dataTables_wrapper {
+    font-size: 0.9em;
+}
+// 検索ボックスと表示件数
+.dataTables_filter input,
+.dataTables_length select {
+    border: 1px solid darken($border-color, 10%);
+    border-radius: 4px;
+    padding: 4px 6px;
+    margin: 0 5px;
+}
+// ページネーション
+.dataTables_paginate .paginate_button {
+    padding: 0.3em 0.8em;
+    margin: 0 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+        border-color: $border-color;
+        background-color: $list-bg;
+    }
+    &.current {
+        background-color: $accent-color;
+        color: white !important; // importantで色を強制上書き
+        border-color: $accent-color;
+        font-weight: bold;
+         &:hover {
+             background-color: darken($accent-color, 10%);
+             border-color: darken($accent-color, 10%);
+         }
+    }
+}
+
+// 一般的なテーブルスタイル
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+th, td {
+    border: 1px solid $border-color;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+}
+thead th {
+    background-color: $table-header-bg;
+    color: $primary-color;
+    font-weight: bold;
+    // DataTablesのソートアイコンと重ならないように調整が必要な場合あり
+    // cursor: pointer; // ソート可能を示すカーソル
+}
+tbody tr:nth-child(even) {
+    background-color: lighten($bg-color, 1%); // 縞模様を少しだけ
+}
+tbody tr:hover {
+    background-color: darken($list-bg, 5%); // 行ホバー
+}
+
+
+// --- 計算ツール (`/tool/` ページ) ---
+.tool-section { // 各セクションのコンテナ (mastered, target, input/result)
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    border: 1px solid $border-color;
+    margin-bottom: 1.5em;
+     h2 { // セクションタイトル
+         margin-top: 0; // 上マージンをリセット
+         padding-bottom: 0.5em;
+         border-bottom: 2px solid $primary-color;
+     }
+}
+
+// フィルターと入力欄
+#rank-filter-select,
+#job-filter-input,
+#current-job-select,
+#current-job-level,
+#mastered-rank-filter-select,
+#mastered-job-filter-input {
+    border: 1px solid darken($border-color, 10%);
+    border-radius: 4px;
+    padding: 6px 8px;
+    background-color: white;
+    margin-bottom: 5px;
+}
+label { // ラベル共通
+    display: block;
+    margin-bottom: 3px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: lighten($text-color, 10%);
+}
+
+// チェックボックスリスト
+#mastered-job-checkbox-list,
+#target-job-checkbox-list {
+   font-size: 0.9em;
+   border: 1px solid $border-color; // 枠線
+   background-color: $list-bg;
+   padding: 10px;
+   border-radius: 4px;
+   div.job-selection-item {
+       margin-bottom: 5px;
+       padding: 3px 5px;
+       border-radius: 3px;
+       transition: background-color 0.15s ease; // ホバー効果を滑らかに
+       &:hover {
+           background-color: darken($list-bg, 5%);
+       }
+       label { // チェックボックス横のラベル
+           cursor: pointer;
+           margin-left: 5px;
+           font-weight: normal;
+           color: $text-color;
+           display: inline;
+           margin-bottom: 0;
+           // user-select: none; // テキスト選択を無効化（任意）
+       }
+       input[type="checkbox"] {
+           vertical-align: middle;
+           cursor: pointer;
+       }
+   }
+}
+#mastered-job-checkbox-list { // マスター済みリスト特有のスタイル
+    background-color: lighten($list-bg, 2%); // 少し背景色を変えるなど
+}
+
+
+// 計算ボタン
+#calculate-button {
+    background-color: $secondary-color;
+    color: $button-text-color;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: darken($secondary-color, 10%);
+        text-decoration: none;
+    }
+}
+
+// 結果表示エリア
+#required-jobs-output {
+    background-color: darken($list-bg, 2%);
+    border-radius: 4px;
+    min-height: 50px;
+    padding: 15px;
+    margin-left: 0;
+    border: 1px solid $border-color;
+    li {
+        padding: 3px 0;
+        border-bottom: 1px dotted lighten($border-color, 5%);
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
+#total-grind-output { // 必要総レベル数
+    color: $result-value-color;
+    font-size: 1.3em;
+    margin-top: -0.5em; // 見出しとの間隔調整
+}
+
+
+// /assets/scss/main.scss に追記
+
+// --- 職業データベーステーブルの列幅調整 ---
+#job-table {
+    // table-layout: fixed; // ← 幅指定を厳密にしたい場合、これを有効にする (ただし全列の幅指定が必要になることも)
+
+    thead th,
+    tbody td {
+        // デフォルトの幅指定 (指定しない列は自動調整)
+    }
+
+    // 1列目: n次職
+    thead th:nth-child(1),
+    tbody td:nth-child(1) {
+        width: 12%;         // 例: 幅を8%に
+        min-width: 60px;   // 例: 最低幅を指定
+        text-align: center; // 中央揃えにしてみる
+    }
+
+    // 2列目: 名前 (自動調整させることが多い)
+    thead th:nth-child(2),
+    tbody td:nth-child(2) {
+         width: auto; // または具体的な%
+    }
+
+    // 3列目: 前提/アイテム (幅を狭める)
+    thead th:nth-child(3),
+    tbody td:nth-child(3) {
+        width: 20%;        // 例: 幅を25%に
+        font-size: 0.9em;  // 文字を少し小さくして折り返しやすく
+    }
+
+    // 4列目: マスターLV
+    thead th:nth-child(4),
+    tbody td:nth-child(4) {
+        width: 11%;         // 例: 幅を8%に
+         min-width: 65px;
+         text-align: center;
+    }
+
+    // 5列目以降: HP, MP, 攻, 魔, 運 (狭めでもOKなことが多い)
+    thead th:nth-child(n+5):nth-child(-n+9), // 5番目から9番目までを選択
+    tbody td:nth-child(n+5):nth-child(-n+9) {
+         width: 4%;
+         text-align: center;
+         min-width: 45px;
+    }
+
+    // 10列目: 技 (残り幅で自動調整 or 指定)
+    thead th:nth-child(10),
+    tbody td:nth-child(10) {
+         width: auto; // 残りの幅
+         font-size: 0.9em;
+    }
+}

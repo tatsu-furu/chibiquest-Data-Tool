@@ -1,0 +1,18 @@
+baseURL = 'http://localhost:1313/' # ★公開時は必ず実際のURLに変更！
+languageCode = 'ja-jp'
+title = 'チビクエスト Data & Tool'
+
+# --- ▼▼▼ [params] セクションを追加/編集 ▼▼▼ ---
+[params]
+  description = "チビクエストの職業データや前提職計算ツールをまとめたファンサイトです。Wikiより見やすく、ツールで便利に！" # サイトのデフォルト説明文
+  ogImage = "/images/default-og.png" # デフォルトのOGP画像パス (staticフォルダからの相対パス)
+  # twitterHandle = "YourTwitterHandle" # サイトのTwitterアカウント (@なし) (任意)
+# --- ▲▲▲ [params] セクションを追加/編集 ▲▲▲ ---
+
+[markup.goldmark.renderer]
+  unsafe = false # HTMLの安全性設定 (変更不要ならそのまま)
+
+[markup.goldmark.renderHooks.link]
+  enableDefault = false # 外部リンクを別タブで開くRender Hookを使う場合
+
+# ignoreLogs = ["warning-goldmark-raw-html"] # 必要なら警告を抑制

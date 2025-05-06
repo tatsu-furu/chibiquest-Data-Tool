@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+{{/* /layouts/_default/baseof.html の <head> 内に追加 */}}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{/* --- ▼▼▼ 基本的なタイトルと説明 ▼▼▼ --- */}}
+    {{ $siteTitle := .Site.Title | default "サイトタイトル未設定" }}
+    {{ $pageTitle := .Title | default $siteTitle }}
+    {{ if not .IsHome }}{{ $pageTitle = printf "%s | %s" .Title $siteTitle }}{{ end }}
+    <title>{{ $pageTitle }}</title>
+    {{ $description := .Description | default (.Summary | plainify | truncate 160) | default (.Site.Params.description | default "サイトの説明がありません") }}
+    <meta name="description" content="{{ $description }}">
+    {{/* --- ▲▲▲ 基本的なタイトルと説明 ▲▲▲ --- */}}
+
+    {{/* --- ▼▼▼ OGP / Twitter Card 設定 ▼▼▼ --- */}}
+    {{ $ogImage := "" }}
+    {{/* ページ個別の画像が front matter の images で指定されていれば使う */}}
+    {{ with .Params.images }}
+        {{ $ogImage = index . 0 | absURL }}
+    {{ end }}
+    {{/* なければサイト共通の画像を params から使う */}}
+    {{ if not $ogImage }}{{ with .Site.Params.ogImage }}{{ $ogImage = . | absURL }}{{ end }}{{ end }}
+    {{/* それもなければ /static/images/default-og.png を試す */}}
+    {{ if not $ogImage }}{{ if fileExists "static/images/default-og.png" }}{{ $ogImage = "images/default-og.png" | absURL }}{{ end }}{{ end }}
+
+    {{/* Open Graph Tags */}}
+    <meta property="og:title" content="{{ .Title | default $siteTitle }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+    <meta property="og:url" content="{{ .Permalink }}">
+    {{ if $ogImage }}<meta property="og:image" content="{{ $ogImage }}">{{ end }}
+    <meta property="og:site_name" content="{{ $siteTitle }}">
+    {{/* <meta property="fb:app_id" content="YOUR_FB_APP_ID"> */}} {{/* Facebook用 (任意) */}}
+
+    {{/* Twitter Card Tags */}}
+    <meta name="twitter:card" content="summary_large_image"> {{/* 大きな画像表示の場合 */}}
+    {{/* <meta name="twitter:card" content="summary"> */}} {{/* 小さな画像表示の場合 */}}
+    <meta name="twitter:title" content="{{ .Title | default $siteTitle }}">
+    <meta name="twitter:description" content="{{ $description }}">
+    {{ if $ogImage }}<meta name="twitter:image" content="{{ $ogImage }}">{{ end }}
+    {{/* <meta name="twitter:site" content="@YourTwitterHandle"> */}} {{/* サイトのTwitterアカウント (任意) */}}
+    {{/* <meta name="twitter:creator" content="@CreatorHandle"> */}} {{/* ページの作成者アカウント (任意) */}}
+    {{/* --- ▲▲▲ OGP / Twitter Card 設定 ▲▲▲ --- */}}
+
+
+    {{/* --- DataTables CSS / SCSS読み込み (既存のコード) --- */}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    {{ $styles := resources.Get "scss/main.scss" | toCSS | minify | fingerprint }}
+    {{ if $styles }}
+        <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}">
+    {{ else }}
+        {{ errorf "Unable to find main SCSS file at /assets/scss/main.scss" }}
+    {{ end }}
+</head>
+<body>
+    <header style="margin-bottom: 2em;"> {{/* ヘッダー下のマージン調整 */}}
+        {{/* サイトタイトルを表示 (hugo.toml で設定) */}}
+        <h1><a href="{{ "/" | relURL }}">{{ .Site.Title | default "サイトタイトル未設定" }}</a></h1>
+
+        {{/* --- ▼▼▼ サイト内ナビゲーションの例 ▼▼▼ --- */}}
+        <nav>
+            <a href="{{ "/" | relURL }}">トップ</a> | {{/* ← トップページへのリンクを追加 */}}
+            <a href="{{ "/jobs/" | relURL }}">職業データベース</a> | {{/* ← 正しい /jobs/ へのリンク */}}
+            <a href="{{ "/tool/" | relURL }}">計算ツール</a>
+            {{/* 他にページがあればここに追加 */}}
+          </nav>
+        <hr>
+        {{/* --- ▲▲▲ サイト内ナビゲーションの例 ▲▲▲ --- */}}
+
+    </header>
+
+    <div id="content">
+        {{/* ↓↓↓ ここで list.html や tool.html などの "main" ブロックが挿入されます ↓↓↓ */}}
+        {{ block "main" . }}
+            {{/* 子テンプレートで "main" が定義されていない場合のデフォルト表示 (通常は空) */}}
+        {{ end }}
+        {{/* ↑↑↑ ここまでが挿入箇所 ↑↑↑ */}}
+    </div>
+
+    <footer style="margin-top: 3em;"> {{/* フッター上のマージン調整 */}}
+        <hr>
+        <p style="text-align: center; font-size: 0.9em; color: #777;">
+             &copy; {{ now.Year }} {{ .Site.Title | default "サイトタイトル未設定" }}
+        </p>
+        {{/* ここにフッター情報を追加できます */}}
+    </footer>
+
+    {{/* --- ▼▼▼ jQuery & DataTables JS (CDN) ▼▼▼ --- */}}
+    {{/* jQuery を DataTables より【前】に読み込む */}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    {{/* --- ▲▲▲ jQuery & DataTables JS ▲▲▲ --- */}}
+
+    {{/* サイト共通のJavaScriptや、特定のページで読み込むJSより先に読み込みたいJSがあればここに追加 */}}
+    {{/* ... calculator.js の読み込み ... */}}
+    <script src="/js/calculator.js" defer></script>
+
+    {{/* --- ▼▼▼ 問い合わせ表示用JS追加 ▼▼▼ --- */}}
+    <script src="/js/contact.js" defer></script>
+    {{/* --- ▲▲▲ 問い合わせ表示用JS追加 ▲▲▲ --- */}}
+
+
+</body>
+</html>
