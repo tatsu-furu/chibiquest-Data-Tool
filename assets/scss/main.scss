@@ -343,3 +343,30 @@ label { // ラベル共通
         border-color: #adb5bd;
     }
 }
+
+// /assets/scss/main.scss に追記
+
+// --- Ko-fi カスタムボタンスタイル ---
+.kofi-button {
+    display: inline-block;        // インラインブロック要素にする
+    padding: 8px 18px;            // 内側の余白
+    background-color: #FF5E5B;    // Ko-fi のブランドカラー（赤）
+    // background-color: $secondary-color; // サイトのテーマカラー（例：金色）に合わせる場合
+    color: white !important;      // 文字色（白） - importantで強制する場合あり
+    border-radius: 5px;           // 角を少し丸める
+    text-decoration: none;        // 下線を消す
+    font-weight: bold;            // 太字
+    font-size: 0.9em;             // 文字サイズ
+    transition: background-color 0.2s ease, transform 0.1s ease; // ホバー効果を滑らかに
+
+    &:hover {                      // マウスが乗った時のスタイル
+        background-color: darken(#FF5E5B, 10%); // 少し暗い赤色に
+        // background-color: darken($secondary-color, 10%); // テーマカラーを使う場合
+        color: white !important;
+        text-decoration: none;
+        transform: translateY(-1px); // 少し上に動かす
+    }
+    &:active {                    // クリックした時のスタイル
+        transform: translateY(0px); // 動きを元に戻す
+    }
+}

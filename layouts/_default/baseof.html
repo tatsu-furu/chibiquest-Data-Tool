@@ -81,6 +81,21 @@
 
     <footer style="margin-top: 3em;"> {{/* フッター上のマージン調整 */}}
         <hr>
+        {{/* --- ▼▼▼ Ko-fi ボタン/リンク修正 ▼▼▼ --- */}}
+        <div style="text-align: center; margin: 1em 0;">
+            {{/* ↓↓↓ 画像ボタンの代わりに、class付きのテキストリンクに変更 ↓↓↓ */}}
+            <a href='https://ko-fi.com/G2G81EKNT7' target='_blank' rel='noopener noreferrer' class='kofi-button'>
+                ☕ Ko-fi で支援する
+            </a>
+            {{/* ↑↑↑ class="kofi-button" を追加 ↑↑↑ */}}
+    
+            {{/* --- ▼▼▼ 注釈を追加 ▼▼▼ --- */}}
+            <p style="font-size: 0.8em; margin-top: 0.7em; color: #777;">
+                (このサイトは個人が趣味で作成・運営しています。もしよろしければ、Ko-fi での少額のご支援は大変助かります！)
+            </p>
+            {{/* --- ▲▲▲ 注釈を追加 ▲▲▲ --- */}}
+        </div>
+        {{/* --- ▲▲▲ Ko-fi ボタン/リンク修正 ▲▲▲ --- */}}
         <p style="text-align: center; font-size: 0.9em; color: #777;">
              &copy; {{ now.Year }} {{ .Site.Title | default "サイトタイトル未設定" }}
         </p>
