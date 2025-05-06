@@ -370,3 +370,33 @@ label { // ラベル共通
         transform: translateY(0px); // 動きを元に戻す
     }
 }
+
+// /assets/scss/main.scss に追記
+
+// --- 計算結果リストの職階ごとの背景色 ---
+#required-jobs-output {
+    li { // li要素のデフォルト設定（パディングなど）
+        padding: 4px 6px;
+        margin-bottom: 2px; // リスト項目間のわずかな隙間
+        border-radius: 3px;
+    }
+
+    // 職階ごとの背景色（例）
+    .rank-0 { background-color: #e9ecef; } // アイテム職 (灰色系)
+    .rank-1 { background-color: #e0f2f1; } // 1次職 (薄い水色系)
+    .rank-2 { background-color: #e8f5e9; } // 2次職 (薄い緑系)
+    .rank-3 { background-color: #fff3e0; } // 3次職 (薄いオレンジ系)
+    .rank-4 { background-color: #fce4ec; } // 4次職 (薄いピンク系)
+    .rank-5 { background-color: #f3e5f5; } // 5次職 (薄い紫系)
+    .rank-6 { background-color: #e3f2fd; } // 6次職 (さらに薄い水色系)
+    .rank-7 { background-color: #fffde7; } // 7次職 (クリーム色系)
+    .rank-8 { background-color: #f1f8e9; } // 8次職 (さらに薄い緑系)
+    .rank-9 { background-color: #ffebee; } // 9次職 (さらに薄い赤系)
+
+    // マスター済みメッセージのスタイル（任意）
+    li:only-child:contains("マスター済みです") {
+         background-color: #dff0d8; // 成功メッセージ風の背景色
+         font-weight: bold;
+         text-align: center;
+    }
+}
