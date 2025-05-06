@@ -324,3 +324,22 @@ label { // ラベル共通
          font-size: 0.9em;
     }
 }
+
+
+// /assets/scss/main.scss の末尾などに追加
+
+.bulk-check-button {
+    padding: 4px 10px;
+    font-size: 0.85em;
+    margin-right: 5px;
+    cursor: pointer;
+    background-color: #e9ecef; // 薄いグレー
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    color: #495057;
+
+    &:hover {
+        background-color: #dee2e6;
+        border-color: #adb5bd;
+    }
+}

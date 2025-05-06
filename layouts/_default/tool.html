@@ -1,87 +1,111 @@
-{{/* ファイルパス: layouts/_default/tool.html (計算ロジック変更対応版) */}}
+{{/* ファイルパス: layouts/_default/tool.html (最終版 - デバッグコード削除) */}}
 {{ define "main" }}
 <main>
     <h1>{{ .Title }}</h1>
     <p>{{ .Content }}</p>
     <hr>
 
+    {{/* デバッグ用コードは削除済み */}}
+
     <div style="display: flex; flex-wrap: wrap; gap: 30px;">
 
-        {{/* 0. マスター済み職業選択エリア (変更なし) */}}
-        <div style="flex: 1 1 300px; border: 1px solid #a2d2ff; padding: 10px; background-color: #f0f8ff;">
-            {{/* ... (内容は変更なし) ... */}}
-             <h2>0. マスター済み職業を選択</h2>
-             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
-                 <div style="flex: 1 1 150px;"><label for="mastered-rank-filter-select">職階絞込:</label><select id="mastered-rank-filter-select" style="width: 100%; padding: 5px;"><option value="0">全て</option>{{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}</select></div>
-                 <div style="flex: 1 1 150px;"><label for="mastered-job-filter-input">名前検索:</label><input type="text" id="mastered-job-filter-input" placeholder="入力..." style="width: 95%; padding: 5px;"></div>
+        {{/* 0. マスター済み職業選択エリア */}}
+        <div class="tool-section" style="flex: 1 1 300px;">
+            <h2>0. マスター済み職業を選択</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                 <div style="flex: 1 1 120px;"><label for="mastered-rank-filter-select">職階絞込:</label><select id="mastered-rank-filter-select" style="width: 100%; padding: 5px;"><option value="0">全て表示</option>{{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}</select></div>
+                 <div style="flex: 1 1 120px;"><label for="mastered-job-filter-input">名前検索:</label><input type="text" id="mastered-job-filter-input" placeholder="入力..." style="width: 95%; padding: 5px;"></div>
             </div>
-            <div id="mastered-job-checkbox-list" style="max-height: 350px; overflow-y: auto; border-top: 1px solid #bde0fe; padding-top: 10px;"><p>読み込み中...</p></div>
+            <div style="margin-bottom: 10px;">
+                <button id="mastered-check-all" class="bulk-check-button">表示を全選択</button>
+                <button id="mastered-uncheck-all" class="bulk-check-button">表示の選択を全解除</button>
+            </div>
+            <div id="mastered-job-checkbox-list" style="max-height: 350px; overflow-y: auto; border-top: 1px solid #bde0fe; padding-top: 10px;">
+                <p>職業リストを読み込み中...</p> {{/* JSがこれを書き換える */}}
+            </div>
             <small>※ この選択状態はブラウザに保存されます。</small>
         </div>
 
-        {{/* 1. 目標職業選択エリア (変更なし) */}}
-        <div style="flex: 1 1 300px; border: 1px solid #ccc; padding: 10px;">
-             {{/* ... (内容は変更なし) ... */}}
+        {{/* 1. 目標職業選択エリア */}}
+        <div class="tool-section" style="flex: 1 1 300px;">
              <h2>1. 目標職業を選択 (複数可)</h2>
              <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
-                 <div style="flex: 1 1 150px;"><label for="target-rank-filter-select">職階絞込:</label><select id="target-rank-filter-select" style="width: 100%; padding: 5px;"><option value="0">全て</option>{{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}</select></div>
-                 <div style="flex: 1 1 150px;"><label for="target-job-filter-input">名前検索:</label><input type="text" id="target-job-filter-input" placeholder="入力..." style="width: 95%; padding: 5px;"></div>
+                 <div style="flex: 1 1 120px;"><label for="target-rank-filter-select">職階絞込:</label><select id="target-rank-filter-select" style="width: 100%; padding: 5px;"><option value="0">全て表示</option>{{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}</select></div>
+                 <div style="flex: 1 1 120px;"><label for="target-job-filter-input">名前検索:</label><input type="text" id="target-job-filter-input" placeholder="入力..." style="width: 95%; padding: 5px;"></div>
             </div>
-            <div id="target-job-checkbox-list" style="max-height: 350px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 10px;"><p>読み込み中...</p></div>
+            <div id="target-job-checkbox-list" style="max-height: 400px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 10px;">
+                <p>職業リストを読み込み中...</p> {{/* JSがこれを書き換える */}}
+            </div>
         </div>
 
-        {{/* 2. 現在の職業とレベル入力 (変更なし) */}}
-        <div style="flex: 1 1 300px;">
+        {{/* 2&3. 入力と結果エリア */}}
+        <div class="tool-section" style="flex: 1 1 300px;">
             <h2>2. 現在の職業とレベル</h2>
-            {{/* ... (内容は変更なし) ... */}}
-             <div style="margin-bottom: 10px;">
+            <div style="margin-bottom: 10px;">
                 <label for="current-job-select" style="display: block; margin-bottom: 2px;">現在の職業:</label>
                 <select id="current-job-select" style="width: 95%; padding: 5px;">
                     <option value="">-- 選択してください --</option>
-                    {{ range sort .Site.Data.jobs "職階" "asc" }}
+                    {{ range sort .Site.Data.jobs "職階" "asc" "職業の名前" "asc" }}
                          {{ $jobName := index . "職業の名前" }}
                          {{ $jobRank := index . "職階" }}
                          {{ if $jobName }}
-                         <option value="{{ $jobName }}">{{ $jobName }} ({{ $jobRank }})</option>
+                         <option value="{{ $jobName }}">{{ $jobName }} ({{ $jobRank }}{{ if ne $jobRank 0 }}次{{ end }})</option>
                          {{ end }}
                     {{ end }}
                 </select>
             </div>
             <div>
                 <label for="current-job-level" style="display: block; margin-bottom: 2px;">その職業の現在のレベル:</label>
-                <input type="number" id="current-job-level" value="1" min="1" style="width: 80px;">
+                <input type="number" id="current-job-level" value="1" min="1" style="width: 80px; padding: 5px;">
             </div>
             <br>
             <button id="calculate-button" style="padding: 10px 15px; font-size: 16px;">計算実行</button>
             <br><br>
-
-            {{/* --- ▼▼▼ 3. 計算結果表示 (ラベルとID修正) ▼▼▼ --- */}}
             <h2>3. 計算結果</h2>
             <div>
                 <h3><span style="color:#dc3545;">残り</span> 必要職業リスト:</h3>
-                <ul id="required-jobs-output" style="max-height: 150px; overflow-y: auto; border: 1px solid #eee; padding: 10px; list-style: none; margin-left: 0;">
+                <ul id="required-jobs-output" style="max-height: 150px; overflow-y: auto; border: 1px solid #eee; padding: 10px 10px 10px 20px; list-style: disc; margin-left: 0; background-color: #f8f9fa; border-radius: 4px;">
                     <li>（マスター済みを除くリスト）</li>
                 </ul>
             </div>
             <div>
                  <h3><span style="color:#dc3545;">⇒</span> これから必要な<span style="font-weight:bold;">総レベル数:</span></h3>
-                 <p id="total-grind-output" style="font-size: 1.3em; font-weight: bold; color: #dc3545;">0</p>
+                 <p id="total-grind-output" style="font-size: 1.3em; font-weight: bold; color: #dc3545; margin-top: -0.5em;">0</p>
                  <small>（現在の職業のマスターに必要なLv + 他の前提職のマスターに必要なLv）</small>
             </div>
-             {{/* --- ▲▲▲ 3. 計算結果表示 (ラベルとID修正) ▲▲▲ --- */}}
         </div>
     </div>
 
-    {{/* --- データ埋め込み & JS読み込み (変更なし) --- */}}
+    {{/* --- ▼▼▼ 計算に必要なデータをJavaScript変数として埋め込む ▼▼▼ --- */}}
     <script>
+      console.log('[Inline Script] Starting data embedding.');
       const jsonString = `{{ .Site.Data.jobs | jsonify }}`;
-      let allJobData = []; let jobDataMap = new Map();
+      console.log('[Inline Script] jsonString length:', jsonString.length);
+      var allJobData = []; // グローバルスコープ (var使用)
+      var jobDataMap = new Map(); // グローバルスコープ (var使用)
+
+      if (jsonString.length < 10) { console.warn('[Inline Script] jsonString seems too short.'); }
+
       try {
           allJobData = JSON.parse(jsonString);
-          if (Array.isArray(allJobData)) { allJobData.forEach(job => { const jobName = job['職業の名前']; if (jobName) { jobDataMap.set(jobName, job); } }); }
-      } catch(e) { console.error("Error parsing job data JSON:", e); }
+          console.log('[Inline Script] JSON parsed successfully.');
+          if (Array.isArray(allJobData)) {
+                jobDataMap = new Map();
+                allJobData.forEach(job => {
+                    const jobName = job['職業の名前'];
+                    if (jobName) { jobDataMap.set(jobName, job); }
+                     else { console.warn('[Inline Script] Job entry found without name:', job); }
+                });
+                console.log('[Inline Script] jobDataMap created. Size:', jobDataMap.size);
+          } else { console.error("[Inline Script] Parsed job data is not an array."); allJobData = []; jobDataMap = new Map(); }
+      } catch(e) { console.error("[Inline Script] Error parsing job data JSON:", e); allJobData = []; jobDataMap = new Map(); }
+      console.log('[Inline Script] Finished data embedding. allJobData length:', allJobData.length, 'jobDataMap size:', jobDataMap.size);
     </script>
+    {{/* --- ▲▲▲ データ埋め込み ▲▲▲ --- */}}
+
+    {{/* --- ▼▼▼ 計算ロジック用JavaScriptファイルを読み込む ▼▼▼ --- */}}
     <script src="/js/calculator.js" defer></script>
+    {{/* --- ▲▲▲ JSファイル読み込み ▲▲▲ --- */}}
 
 </main>
 {{ end }}
