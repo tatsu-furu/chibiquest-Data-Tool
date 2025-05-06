@@ -1,4 +1,4 @@
-baseURL = 'http://localhost:1313/' # ★公開時は必ず実際のURLに変更！
+baseURL = 'https://chibiquest.alt4l.dev/' # ← http を https に変更
 languageCode = 'ja-jp'
 title = 'チビクエスト Data & Tool'
 
