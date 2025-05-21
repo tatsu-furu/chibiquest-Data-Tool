@@ -1,0 +1,54 @@
+{{ define "main" }}
+<div class="container py-4">
+  <h1 class="mb-4">{{ .Title }}</h1>
+  <p>{{ .Content }}</p>
+
+  <div class="card mb-4">
+    <div class="card-header">計算条件入力</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="currentLevel" class="form-label">現在のレベル:</label>
+            <input type="number" id="currentLevel" class="form-control" value="1" min="1">
+          </div>
+          <div class="mb-3">
+            <label for="currentExp" class="form-label">現在のレベルでの獲得済み経験値 (任意):</label>
+            <input type="number" id="currentExp" class="form-control" value="0" min="0">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="calcModeSelect" class="form-label">計算モード:</label>
+            <select id="calcModeSelect" class="form-select">
+              <option value="target" selected>目標レベルまで計算</option>
+              <option value="session">指定回数レベリング計算</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="expSettingSelect" class="form-label">使用予定倍アイテム（相互での獲得経験値目安）:</label> <select id="expSettingSelect" class="form-select"> <option value="10x">10倍 (16億)</option> <option value="15x">15倍 (24億)</option> <option value="20x">20倍 (32億)</option> </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3" id="targetLevelGroup">
+        <label for="targetLevel" class="form-label">目標レベル:</label>
+        <input type="number" id="targetLevel" class="form-control" value="100" min="1">
+      </div>
+      <div class="mb-3" id="sessionCountGroup" style="display: none;">
+        <label for="sessionCount" class="form-label">レベリング回数:</label>
+        <input type="number" id="sessionCount" class="form-control" value="10" min="1">
+      </div>
+      <button id="calculateButton" class="btn btn-primary w-100">計算実行</button>
+    </div>
+  </div>
+
+  <div class="card mt-4"> <div class="card-header">計算結果</div>
+    <div class="card-body">
+      <div id="resultSummary" class="mb-3"></div> <div id="resultLogTableContainer" class="mt-3"></div>
+      <div id="resultChartContainer" class="mt-3" style="position: relative; height:40vh; width:100%;"> <canvas id="levelingChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

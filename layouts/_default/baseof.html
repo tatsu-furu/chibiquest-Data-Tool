@@ -45,9 +45,10 @@
     <header style="margin-bottom: 2em;">
         <h1><a href="{{ "/" | relURL }}">{{ .Site.Title | default "サイトタイトル未設定" }}</a></h1>
         <nav>
-          <a href="{{ "/" | relURL }}">トップ</a> |
-          <a href="{{ "/jobs/" | relURL }}">職業データベース</a> |
-          <a href="{{ "/tool/" | relURL }}">計算ツール</a>
+            <a href="{{ "/" | relURL }}">トップ</a> |
+            <a href="{{ "/jobs/" | relURL }}">職業データベース</a> |
+            <a href="{{ "/tool/" | relURL }}">前提職計算</a> |
+            <a href="{{ "/leveling-calculator/" | relURL }}">レベリング計算</a>
         </nav>
         <hr>
     </header>
@@ -62,28 +63,37 @@
 
     <footer style="margin-top: 3em;">
         <hr>
-        {{/* --- Ko-fi ボタンは削除され、Widgetスクリプトが body 閉じタグ前に追加されています --- */}}
         <p style="text-align: center; font-size: 0.9em; color: #777; margin-top: 2em;">
              &copy; {{ now.Year }} {{ .Site.Title | default "サイトタイトル未設定" }}
         </p>
     </footer>
 
-    {{/* --- ▼▼▼ Essential JS Libraries ▼▼▼ --- */}}
+    {{/* --- ▼▼▼ Essential JS Libraries (jQuery and DataTables) ▼▼▼ --- */}}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
     {{/* --- ▲▲▲ Essential JS Libraries ▲▲▲ --- */}}
 
-    {{/* --- ▼▼▼ Site Specific JS ▼▼▼ --- */}}
-    <script src="/js/calculator.js" defer></script>
-    <script src="/js/contact.js" defer></script>
-    {{/* --- ▲▲▲ Site Specific JS ▲▲▲ --- */}}
+{{/* --- ▼▼▼ Page Specific JS ▼▼▼ --- */}}
+    {{ if eq .Page.RelPermalink "/tool/" }} {{/* 前提職計算ツールのパーマリンク */}}
+        <script src="{{ "/js/calculator.js" | relURL }}" defer></script>
+    {{ end }}
+
+    {{ if eq .Page.RelPermalink "/leveling-calculator/" }} {{/* レベリング計算ツールのパーマリンク */}}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{{ "/js/leveling-calculator.js" | relURL }}" defer></script>
+    {{ end }}
+
+    {{ if or .IsHome (findRE `\{\{\s*<\s*contact_placeholder\s*>\s*\}\}` .RawContent) }}
+        <script src="{{ "/js/contact.js" | relURL }}" defer></script>
+    {{ end }}
+    {{/* --- ▲▲▲ Page Specific JS ▲▲▲ --- */}}
 
     {{/* --- ▼▼▼ Ko-fi Overlay Widget Code ▼▼▼ --- */}}
     <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
     <script>
       // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
       // ★ 必ず 'alt4l' の部分を、ご自身の正しい Ko-fi ID/ユーザー名に置き換えてください！ ★
-      // ★ (以前 'G2G81EKNT7' を使っていたかもしれません)                                   ★
+      // ★ (以前 'G2G81EKNT7' を使っていたかもしれません)                                 ★
       // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
       kofiWidgetOverlay.draw('alt4l', { // ← ここの ID を確認！！
         'type': 'floating-chat',
