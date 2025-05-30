@@ -31,6 +31,10 @@
     {{/* --- ▼▼▼ CSS Links ▼▼▼ --- */}}
     {{/* DataTables CSS */}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    {{/* Bootstrap CSS (SCSS経由で読み込まれるはずですが、念のため確認) */}}
+    {{/* もし main.scss で Bootstrap を @import していない場合は、ここにBootstrapのCDNリンクを追加してください */}}
+    {{/* 例: <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> */}}
+
     {{/* SCSS Processing */}}
     {{ $styles := resources.Get "scss/main.scss" | toCSS | minify | fingerprint }}
     {{ if $styles }}
@@ -46,7 +50,8 @@
         <h1><a href="{{ "/" | relURL }}">{{ .Site.Title | default "サイトタイトル未設定" }}</a></h1>
         <nav>
             <a href="{{ "/" | relURL }}">トップ</a> |
-            <a href="{{ "/jobs/" | relURL }}">職業データベース</a> |
+            <a href="{{ "/jobs/" | relURL }}">職業DB</a> |
+            <a href="{{ "/equipment/" | relURL }}">装備図鑑</a> |  {{/* ★装備図鑑のリンクを追加 */}}
             <a href="{{ "/tool/" | relURL }}">前提職計算</a> |
             <a href="{{ "/leveling-calculator/" | relURL }}">レベリング計算</a>
         </nav>
@@ -71,35 +76,44 @@
     {{/* --- ▼▼▼ Essential JS Libraries (jQuery and DataTables) ▼▼▼ --- */}}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    {{/* Bootstrap JS (モーダルや他のコンポーネントに必要なら、サイト全体で一括読み込みも検討) */}}
+    {{/* もし多くのページでBootstrapのJS機能を使うなら、ここに移動しても良い */}}
+    {{/* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script> */}}
     {{/* --- ▲▲▲ Essential JS Libraries ▲▲▲ --- */}}
 
-{{/* --- ▼▼▼ Page Specific JS ▼▼▼ --- */}}
-    {{ if eq .Page.RelPermalink "/tool/" }} {{/* 前提職計算ツールのパーマリンク */}}
+    {{/* --- ▼▼▼ Page Specific JS ▼▼▼ --- */}}
+    {{ if eq .Page.RelPermalink "/tool/" }} {{/* 前提職計算ツール */}}
         <script src="{{ "/js/calculator.js" | relURL }}" defer></script>
     {{ end }}
 
-    {{ if eq .Page.RelPermalink "/leveling-calculator/" }} {{/* レベリング計算ツールのパーマリンク */}}
+
+
+    {{ if eq .Page.RelPermalink "/leveling-calculator/" }} {{/* レベリング計算ツール */}}
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="{{ "/js/leveling-calculator.js" | relURL }}" defer></script>
     {{ end }}
 
+    {{ if eq .Page.RelPermalink "/equipment/" }} {{/* ★★★ 装備図鑑用のスクリプト読み込み ★★★ */}}
+        {{/* Bootstrap JS (モーダル用) - ここで読み込むか、上記Essential JSに移動 */}}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="{{ "/js/equipment-gallery.js" | relURL }}" defer></script>
+    {{ end }}
+
+    {{/* contact.js */}}
     {{ if or .IsHome (findRE `\{\{\s*<\s*contact_placeholder\s*>\s*\}\}` .RawContent) }}
         <script src="{{ "/js/contact.js" | relURL }}" defer></script>
     {{ end }}
     {{/* --- ▲▲▲ Page Specific JS ▲▲▲ --- */}}
 
+
     {{/* --- ▼▼▼ Ko-fi Overlay Widget Code ▼▼▼ --- */}}
     <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
     <script>
-      // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-      // ★ 必ず 'alt4l' の部分を、ご自身の正しい Ko-fi ID/ユーザー名に置き換えてください！ ★
-      // ★ (以前 'G2G81EKNT7' を使っていたかもしれません)                                 ★
-      // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-      kofiWidgetOverlay.draw('alt4l', { // ← ここの ID を確認！！
+      kofiWidgetOverlay.draw('alt4l', { // ★ Ko-fi ID を確認してください
         'type': 'floating-chat',
-        'floating-chat.donateButton.text': 'Support me', // ボタンテキスト
-        'floating-chat.donateButton.background-color': '#ffffff', // ボタン背景色
-        'floating-chat.donateButton.text-color': '#323842' // ボタン文字色
+        'floating-chat.donateButton.text': 'Support me',
+        'floating-chat.donateButton.background-color': '#ffffff',
+        'floating-chat.donateButton.text-color': '#323842'
       });
     </script>
     {{/* --- ▲▲▲ Ko-fi Overlay Widget Code ▲▲▲ --- */}}

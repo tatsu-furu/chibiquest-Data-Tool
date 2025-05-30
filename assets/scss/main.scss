@@ -400,3 +400,100 @@ label { // ラベル共通
          text-align: center;
     }
 }
+
+// ... (既存のスタイル) ...
+
+.equipment-card-detailed {
+    .equipment-image-detailed {
+        max-width: 100%;
+        max-height: 160px; // 詳細カード内の画像高さを少し調整
+        object-fit: contain;
+    }
+    .card-body {
+        font-size: 0.85rem; // 全体的に少しフォントを小さく
+        // h-100 を親の .row g-0 と組み合わせる場合、flex-grow:1 も有効
+        flex-grow: 1; 
+        display: flex;
+        flex-direction: column;
+    }
+    .scrollable-stats-desc { // 性能と説明をまとめてスクロール
+        //overflow-y: auto;
+        //max-height: 350px; // スクロールを開始する高さの目安 (調整が必要)
+        flex-grow: 1; // 残りの高さを占めるように
+        margin-bottom: 0.5rem;
+    }
+    .card-text-description {
+        font-size: 0.9em; // フォントサイズはお好みで
+        line-height: 1.4;
+        white-space: pre-wrap; // JSON内の \n を<br>と同様に扱う
+        // overflow-y: auto; // ★★★ 説明文個別のスクロールも削除 ★★★
+        // max-height: none;   // ★★★ 説明文個別の高さ制限も削除 ★★★
+        word-break: break-word; // ★ 幅に合わせて改行させるために break-all から変更または追加
+    }
+    h6.small {
+        font-weight: bold;
+        color: #454545;
+        font-size: 0.9em;
+    }
+    ul.list-unstyled li {
+        padding: 0.05rem 0;
+    }
+}
+
+.equipment-card-simple {
+    .equipment-image {
+        max-height: 130px; // シンプルカードの画像高さを調整
+        object-fit: contain;
+    }
+    .card-stats-container-simple {
+        ul.list-stats-card { // カード下の簡易ステータス
+            font-size: 0.7rem;
+            li { margin-right: 0.5rem !important; }
+        }
+    }
+}
+
+// Font Awesome を使用していない場合は、この部分は削除またはコメントアウト
+.external-link::after {
+  content: " \f08e";
+  font-family: "Font Awesome 5 Free", "Font Awesome 5 Brands";
+  font-weight: 900;
+  font-size: 0.8em;
+  margin-left: 3px;
+}
+
+// assets/scss/main.scss の一番最後などに追加 (デバッグ用)
+
+#equipment-list-container {
+  display: flex !important;     // 親を強制的にflexコンテナに
+  flex-wrap: wrap !important;   // 子要素の折り返しを許可
+  // row-cols-* クラスが正しく機能していれば、以下の幅指定は不要なはずだが、
+  // 問題切り分けのためにコメントアウトしておく
+  // & > .col { // 直下の子である .col 要素に対して
+  //   // width: auto !important; // Bootstrapの列計算に任せる (row-cols-* を使う場合)
+  //   // または、特定の列数を強制したい場合 (例: 4列)
+  //   // flex-basis: calc(25% - var(--bs-gutter-x, 1.5rem)) !important; // g-4 の場合 (1.5rem)
+  //   // max-width: calc(25% - var(--bs-gutter-x, 1.5rem)) !important;
+  //   // display: block !important; // ← これは Flex アイテムの場合通常不要
+  // }
+}
+
+// もし cardCol に .col を設定している場合
+#equipment-list-container > .col {
+    // ここに width や flex-basis を !important 付きで設定して、
+    // Bootstrapの row-cols-* が機能していない場合に強制的に列幅を与えることを試せる。
+    // ただし、これは row-cols-* との併用ではなく、どちらか一方を使うべき。
+    // 例: 常に4列にしたい場合 (row-cols-* は無視される)
+    // width: calc(25% - 1.5rem) !important; // g-4 を考慮
+    // flex-basis: calc(25% - 1.5rem) !important;
+    // max-width: calc(25% - 1.5rem) !important;
+}
+
+// カード自体の幅が100%になっていないか確認
+.equipment-card-simple,
+.equipment-card-detailed {
+  width: 100% !important; // カードは列の幅いっぱいに広がるのが通常 (列の幅は .col や row-cols-* で制御)
+  // もしこれが原因で1列になっているなら、この width 指定を見直す
+  // display: flex !important; // カード内部のレイアウトのため
+  // flex-direction: column !important;
+}

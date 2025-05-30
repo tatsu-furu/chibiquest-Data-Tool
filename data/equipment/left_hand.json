@@ -1,0 +1,92 @@
+[
+  {
+    "name": "祝巳尾環＋",
+    "part": "left_hand",
+    "color": "青",
+    "level": 990,
+    "stats": {
+      "attack": 0,
+      "defense": 315,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "被ダメ2倍、与ダメ1.5倍",
+    "image_path": "/images/equipment/left_hand/2501syouboxrea_p.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2501syouboxrea_p.gif",
+    "timestamp": "2025-05-30T14:13:43.925Z"
+  }
+    ,
+    {
+        "name": "祝巳尾環＋＋",
+        "part": "left_hand",
+        "color": "青",
+        "level": 990,
+        "stats": {
+        "attack": 0,
+        "defense": 315,
+        "magicAttack": 0,
+        "magicDefense": 0,
+        "luck": 0
+        },
+        "description": "被ダメ2倍、与ダメ1.5倍",
+        "image_path": "/images/equipment/left_hand/2501syouboxrea_p.gif",
+        "original_image_url": "http://earth.chibiquest.net/img/item/2502syouboxrea_p.gif",
+        "timestamp": "2025-05-30T14:13:43.925Z"
+    }
+    ,
+    {
+        "name": "祝巳尾環＋＋＋",
+        "part": "left_hand",
+        "color": "青",
+        "level": 990,
+        "stats": {
+        "attack": 0,
+        "defense": 315,
+        "magicAttack": 0,
+        "magicDefense": 0,
+        "luck": 0
+        },
+        "description": "被ダメ2倍、与ダメ1.5倍",
+        "image_path": "/images/equipment/left_hand/2501syouboxrea_p.gif",
+        "original_image_url": "http://earth.chibiquest.net/img/item/2503syouboxrea_p.gif",
+        "timestamp": "2025-05-30T14:13:43.925Z"
+    }
+    ,
+    {
+        "name": "祝巳尾環＋＋＋＋",
+        "part": "left_hand",
+        "color": "青",
+        "level": 990,
+        "stats": {
+        "attack": 0,
+        "defense": 315,
+        "magicAttack": 0,
+        "magicDefense": 0,
+        "luck": 0
+        },
+        "description": "被ダメ2倍、与ダメ1.5倍",
+        "image_path": "/images/equipment/left_hand/2501syouboxrea_p.gif",
+        "original_image_url": "http://earth.chibiquest.net/img/item/2504syouboxrea_p.gif",
+        "timestamp": "2025-05-30T14:13:43.925Z"
+    }
+    ,
+    {
+        "name": "祝巳尾環＋＋＋＋＋",
+        "part": "left_hand",
+        "color": "青",
+        "level": 990,
+        "stats": {
+        "attack": 0,
+        "defense": 315,
+        "magicAttack": 0,
+        "magicDefense": 0,
+        "luck": 0
+        },
+        "description": "被ダメ2倍、与ダメ1.5倍",
+        "image_path": "/images/equipment/left_hand/2501syouboxrea_p.gif",
+        "original_image_url": "http://earth.chibiquest.net/img/item/2505syouboxrea_p.gif",
+        "timestamp": "2025-05-30T14:13:43.925Z"
+    }
+    
+]

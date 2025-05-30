@@ -1,0 +1,80 @@
+{{ define "main" }}
+<div class="container py-4">
+  <h1 class="mb-4">{{ .Title }}</h1>
+  <p>{{ .Content }}</p>
+
+  <div class="row mb-3 align-items-end">
+    <div class="col-md-3 mb-2">
+      <label for="equip-search-name" class="form-label">装備名検索:</label>
+      <input type="text" id="equip-search-name" class="form-control form-control-sm" placeholder="例: すごい剣">
+    </div>
+    <div class="col-md-2 mb-2">
+      <label for="equip-filter-part" class="form-label">部位:</label>
+      <select id="equip-filter-part" class="form-select form-select-sm">
+        <option value="">すべて</option>
+        <option value="head">頭</option>
+        <option value="body">上半身</option>
+        <option value="legs">下半身</option>
+        <option value="right_hand">右手</option>
+        <option value="left_hand">左手</option>
+      </select>
+    </div>
+    <div class="col-md-2 mb-2">
+      <label for="equip-filter-color" class="form-label">色系統:</label>
+      <select id="equip-filter-color" class="form-select form-select-sm">
+        <option value="">すべて</option>
+        <option value="白">白</option>
+        <option value="黒">黒</option>
+        <option value="赤">赤</option>
+        <option value="青">青</option>
+        <option value="緑">緑</option>
+        <option value="黄">黄</option>
+        <option value="紫">紫</option>
+        <option value="ピンク">ピンク</option>
+        <option value="オレンジ">オレンジ</option>
+
+        <option value="その他">その他</option>
+      </select>
+    </div>
+    <div class="col-md-2 mb-2">
+      <label for="equip-sort" class="form-label">並び順:</label>
+      <select id="equip-sort" class="form-select form-select-sm">
+        <option value="name_asc">名前 (昇順)</option>
+        <option value="name_desc">名前 (降順)</option>
+        <option value="level_asc">装着Lv (昇順)</option>
+        <option value="level_desc">装着Lv (降順)</option>
+      </select>
+    </div>
+    <div class="col-md-2 mb-2">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="toggle-stats-display-list">
+        <label class="form-check-label small" for="toggle-stats-display-list">詳細表示</label>
+      </div>
+    </div>
+    <div class="col-md-1 mb-2">
+        <button id="equip-filter-reset" class="btn btn-outline-secondary btn-sm w-100">リセット</button>
+    </div>
+  </div>
+
+  <div id="equipment-list-container" class="row g-5">
+    <p id="equipment-loading-message">装備データを読み込み中...</p>
+  </div>
+
+</div>
+
+{{/* JavaScriptへのデータ埋め込み */}}
+<script>
+  // Hugoのdataディレクトリから装備データを取得し、JavaScriptのグローバル変数に格納
+  // 各JSONファイルが存在しない場合や空の場合のエラーを防ぐため、default (slice) を使用
+  window.allEquipmentDataFromHugo = {
+    head:       {{ site.Data.equipment.head | default (slice) | jsonify | safeJS }},
+    body:       {{ site.Data.equipment.body | default (slice) | jsonify | safeJS }},
+    legs:       {{ site.Data.equipment.legs | default (slice) | jsonify | safeJS }},
+    right_hand: {{ site.Data.equipment.right_hand | default (slice) | jsonify | safeJS }},
+    left_hand:  {{ site.Data.equipment.left_hand | default (slice) | jsonify | safeJS }}
+  };
+  // デバッグ用にコンソールに出力
+  console.log('[Hugo Template - equipment_list.html] Embedded equipment data:', JSON.parse(JSON.stringify(window.allEquipmentDataFromHugo)));
+</script>
+
+{{ end }}
