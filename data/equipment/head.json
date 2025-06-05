@@ -1,1 +1,121 @@
-[]
+[
+  {
+    "name": "プリシアリボン",
+    "part": "head",
+    "color": "赤",
+    "level": 55,
+    "stats": {
+      "attack": 0,
+      "defense": 8,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/head/36h.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/36h.gif",
+    "timestamp": "2025-06-05T04:15:53.719Z"
+  },
+  {
+    "name": "ドットラリボン",
+    "part": "head",
+    "color": "黒",
+    "level": 2850,
+    "stats": {
+      "attack": 0,
+      "defense": 684,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/head/yuuenu1.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/yuuenu1.gif",
+    "timestamp": "2025-06-05T04:23:43.367Z"
+  },
+  {
+    "name": "クリスマスヴェールα＋",
+    "part": "head",
+    "color": "白",
+    "level": 600,
+    "stats": {
+      "attack": 0,
+      "defense": 132,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/head/21kuriegh3_p.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/21kuriegh3_p.gif",
+    "timestamp": "2025-06-05T04:26:50.116Z"
+  },
+  {
+    "name": "霊女の光輪",
+    "part": "head",
+    "color": "白",
+    "level": 770,
+    "stats": {
+      "attack": 0,
+      "defense": 0,
+      "magicAttack": 219,
+      "magicDefense": 169,
+      "luck": -310
+    },
+    "description": "",
+    "image_path": "/images/equipment/head/18haro770mh.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/18haro770mh.gif",
+    "timestamp": "2025-06-05T04:29:57.927Z"
+  },
+  {
+    "name": "パップハット",
+    "part": "head",
+    "color": "黒",
+    "level": 960,
+    "stats": {
+      "attack": 0,
+      "defense": 192,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/head/2410pampu1.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2410pampu1.gif",
+    "timestamp": "2025-06-05T04:40:36.137Z"
+  },
+  {
+    "name": "宵舞花の髪飾り",
+    "part": "head",
+    "color": "オレンジ",
+    "level": 1,
+    "stats": {
+      "attack": 0,
+      "defense": 1,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/head/121h.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/121h.gif",
+    "timestamp": "2025-06-05T04:41:08.875Z"
+  },
+  {
+    "name": "クラウンリボン",
+    "part": "head",
+    "color": "赤",
+    "level": 1000,
+    "stats": {
+      "attack": 0,
+      "defense": 10,
+      "magicAttack": 300,
+      "magicDefense": 210,
+      "luck": 0
+    },
+    "description": "進行時、魔攻力の5%+5上昇",
+    "image_path": "/images/equipment/head/2409undoiberea.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2409undoiberea.gif",
+    "timestamp": "2025-06-05T04:45:39.254Z"
+  }
+]

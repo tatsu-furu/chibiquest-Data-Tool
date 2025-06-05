@@ -1,1 +1,172 @@
-[]
+[
+  {
+    "name": "プリシアスカート",
+    "part": "legs",
+    "color": "赤",
+    "level": 55,
+    "stats": {
+      "attack": 0,
+      "defense": 12,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/36f.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/36f.gif",
+    "timestamp": "2025-06-05T04:17:27.403Z"
+  },
+  {
+    "name": "バク天使のタイツ",
+    "part": "legs",
+    "color": "白",
+    "level": 510,
+    "stats": {
+      "attack": 0,
+      "defense": 123,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/21syotein.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/21syotein.gif",
+    "timestamp": "2025-06-05T04:19:24.556Z"
+  },
+  {
+    "name": "ストリンリング",
+    "part": "legs",
+    "color": "ピンク",
+    "level": 240,
+    "stats": {
+      "attack": 0,
+      "defense": 5,
+      "magicAttack": 48,
+      "magicDefense": 72,
+      "luck": -96
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/2502valdrom3.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2502valdrom3.gif",
+    "timestamp": "2025-06-05T04:21:27.416Z"
+  },
+  {
+    "name": "クリスティナスカート",
+    "part": "legs",
+    "color": "赤",
+    "level": 77,
+    "stats": {
+      "attack": 0,
+      "defense": 15,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/13ibedec06f.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/13ibedec06f.gif",
+    "timestamp": "2025-06-05T04:24:57.027Z"
+  },
+  {
+    "name": "クリパドレスα＋",
+    "part": "legs",
+    "color": "青",
+    "level": 600,
+    "stats": {
+      "attack": 0,
+      "defense": 132,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/21kuriegf3_p.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/21kuriegf3_p.gif",
+    "timestamp": "2025-06-05T04:28:07.321Z"
+  },
+  {
+    "name": "月使兎スカート",
+    "part": "legs",
+    "color": "ピンク",
+    "level": 140,
+    "stats": {
+      "attack": 0,
+      "defense": 3,
+      "magicAttack": 28,
+      "magicDefense": 42,
+      "luck": -56
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/22tukiibegm3.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/22tukiibegm3.gif",
+    "timestamp": "2025-06-05T04:30:48.719Z"
+  },
+  {
+    "name": "桜猫のシッポ",
+    "part": "legs",
+    "color": "ピンク",
+    "level": 100,
+    "stats": {
+      "attack": 0,
+      "defense": 0,
+      "magicAttack": 21,
+      "magicDefense": 30,
+      "luck": -40
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/2016hana100mf.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2016hana100mf.gif",
+    "timestamp": "2025-06-05T04:31:34.804Z"
+  },
+  {
+    "name": "パップスカート",
+    "part": "legs",
+    "color": "オレンジ",
+    "level": 960,
+    "stats": {
+      "attack": 0,
+      "defense": 192,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/2410pampu3.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2410pampu3.gif",
+    "timestamp": "2025-06-05T04:32:18.965Z"
+  },
+  {
+    "name": "兎姫の月α",
+    "part": "legs",
+    "color": "黄",
+    "level": 2500,
+    "stats": {
+      "attack": 0,
+      "defense": 66,
+      "magicAttack": 660,
+      "magicDefense": 990,
+      "luck": -1200
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/22wagasicharem3.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/22wagasicharem3.gif",
+    "timestamp": "2025-06-05T04:42:49.285Z"
+  },
+  {
+    "name": "水海月の水着下",
+    "part": "legs",
+    "color": "その他",
+    "level": 900,
+    "stats": {
+      "attack": 0,
+      "defense": 216,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/legs/2409umiboxu3.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2409umiboxu3.gif",
+    "timestamp": "2025-06-05T04:47:17.977Z"
+  }
+]

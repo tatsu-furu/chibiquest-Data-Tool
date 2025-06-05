@@ -1,1 +1,70 @@
-[]
+[
+  {
+    "name": "歌うシマエナガ",
+    "part": "right_hand",
+    "color": "白",
+    "level": 530,
+    "stats": {
+      "attack": 795,
+      "defense": 0,
+      "magicAttack": 636,
+      "magicDefense": 0,
+      "luck": -212
+    },
+    "description": "",
+    "image_path": "/images/equipment/right_hand/24kurismdr6.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/24kurismdr6.gif",
+    "timestamp": "2025-06-05T04:22:39.323Z"
+  },
+  {
+    "name": "クリパチケット＋",
+    "part": "right_hand",
+    "color": "黒",
+    "level": 250,
+    "stats": {
+      "attack": 826,
+      "defense": 0,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": -100
+    },
+    "description": "",
+    "image_path": "/images/equipment/right_hand/21kuriegr3_p.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/21kuriegr3_p.gif",
+    "timestamp": "2025-06-05T04:26:13.877Z"
+  },
+  {
+    "name": "カラフバルルーン",
+    "part": "right_hand",
+    "color": "その他",
+    "level": 2850,
+    "stats": {
+      "attack": 2394,
+      "defense": 0,
+      "magicAttack": 20520,
+      "magicDefense": 0,
+      "luck": -1140
+    },
+    "description": "",
+    "image_path": "/images/equipment/right_hand/yuuenr7.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/yuuenr7.gif",
+    "timestamp": "2025-06-05T04:29:04.856Z"
+  },
+  {
+    "name": "水海月リング",
+    "part": "right_hand",
+    "color": "その他",
+    "level": 900,
+    "stats": {
+      "attack": 486,
+      "defense": 0,
+      "magicAttack": 3564,
+      "magicDefense": 0,
+      "luck": -360
+    },
+    "description": "",
+    "image_path": "/images/equipment/right_hand/2409umiboxr7.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2409umiboxr7.gif",
+    "timestamp": "2025-06-05T04:48:21.018Z"
+  }
+]

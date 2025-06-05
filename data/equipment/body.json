@@ -1,1 +1,121 @@
-[]
+[
+  {
+    "name": "プリシアエプロン",
+    "part": "body",
+    "color": "白",
+    "level": 55,
+    "stats": {
+      "attack": 0,
+      "defense": 12,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/body/36b.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/36b.gif",
+    "timestamp": "2025-06-05T04:16:49.696Z"
+  },
+  {
+    "name": "バク天使のワンピ",
+    "part": "body",
+    "color": "白",
+    "level": 510,
+    "stats": {
+      "attack": 0,
+      "defense": 0,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/body/21syoteim.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/21syoteim.gif",
+    "timestamp": "2025-06-05T04:18:41.081Z"
+  },
+  {
+    "name": "クリスティナドレス",
+    "part": "body",
+    "color": "赤",
+    "level": 77,
+    "stats": {
+      "attack": 0,
+      "defense": 15,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/body/13ibedec06b.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/13ibedec06b.gif",
+    "timestamp": "2025-06-05T04:24:21.448Z"
+  },
+  {
+    "name": "クリパトップス＋",
+    "part": "body",
+    "color": "青",
+    "level": 250,
+    "stats": {
+      "attack": 0,
+      "defense": 56,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/body/21kuriegb3_p.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/21kuriegb3_p.gif",
+    "timestamp": "2025-06-05T04:27:27.568Z"
+  },
+  {
+    "name": "パップトップ",
+    "part": "body",
+    "color": "黒",
+    "level": 960,
+    "stats": {
+      "attack": 0,
+      "defense": 192,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/body/2410pampu2.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2410pampu2.gif",
+    "timestamp": "2025-06-05T04:32:56.408Z"
+  },
+  {
+    "name": "兎姫の着物α",
+    "part": "body",
+    "color": "ピンク",
+    "level": 2500,
+    "stats": {
+      "attack": 0,
+      "defense": 66,
+      "magicAttack": 660,
+      "magicDefense": 990,
+      "luck": -1200
+    },
+    "description": "",
+    "image_path": "/images/equipment/body/22wagasicharem2.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/22wagasicharem2.gif",
+    "timestamp": "2025-06-05T04:41:57.773Z"
+  },
+  {
+    "name": "水海月の水着上",
+    "part": "body",
+    "color": "その他",
+    "level": 900,
+    "stats": {
+      "attack": 0,
+      "defense": 216,
+      "magicAttack": 0,
+      "magicDefense": 0,
+      "luck": 0
+    },
+    "description": "",
+    "image_path": "/images/equipment/body/2409umiboxu2.gif",
+    "original_image_url": "http://earth.chibiquest.net/img/item/2409umiboxu2.gif",
+    "timestamp": "2025-06-05T04:46:40.796Z"
+  }
+]
