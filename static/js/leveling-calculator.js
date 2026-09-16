@@ -323,6 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // --- 経験値テーブル (Lv1501以降の定義) ---
+    // 4番目の要素は1レベルごとの成長率(0=固定, 0.01=1%増加)
     const expPerLevelRangesAfter1500Data = [
         [1501, 1600, 100000000], [1601, 1700, 110000000], [1701, 1800, 120000000],
         [1801, 1900, 130000000], [1901, 2000, 140000000], [2001, 2100, 150000000],
@@ -332,8 +333,12 @@ document.addEventListener('DOMContentLoaded', function () {
         [2901, 3000, 151500000], [3001, 3200, 160000000],
         [3201, 3300, 160000000],
         [3301, 3400, 160000000],
-        [3401, 3500, 160000000],
-        [3501, 3800, 170000000]
+        [3401, 3501, 160000000],
+        [3502, 4000, 170000000],
+        [4001, 4500, 200000000],
+        [4501, 5000, 250000000],
+        [5001, 5069, 252500000, 0.01],
+        [5070, 5500, 500000000]
     ];
 
     let fullExpTable = { ...expTableLv1to1500 };
@@ -361,6 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const startLv = rangeArray[0];
             const endLv = rangeArray[1];
             const expNeededPerLevelInThisRange = rangeArray[2];
+            const growthFactor = rangeArray[3] || 0;
 
             if (typeof startLv !== 'number' || typeof endLv !== 'number' || typeof expNeededPerLevelInThisRange !== 'number') {
                 console.error(`[leveling-calculator.js] Invalid data type in range at index ${index}:`, rangeArray);
@@ -371,18 +377,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            let currentExpPerLevel = expNeededPerLevelInThisRange;
 
             for (let currentLv = Math.max(lastProcessedLevel + 1, startLv); currentLv <= endLv; currentLv++) {
                 if (fullExpTable[currentLv] !== undefined) {
                     console.warn(`[leveling-calculator.js] Level ${currentLv} is already defined in fullExpTable. Current value: ${fullExpTable[currentLv]}. Skipping recalculation, but updating lastCumulativeExp.`);
                     lastCumulativeExp = fullExpTable[currentLv];
+                    if (growthFactor > 0) currentExpPerLevel = currentExpPerLevel * (1 + growthFactor);
                     continue;
                 }
-                // Jupyter Notebookのロジックでは、範囲内の各レベルで expNeededPerLevelInThisRange を加算
-                lastCumulativeExp += expNeededPerLevelInThisRange;
+                lastCumulativeExp += Math.round(currentExpPerLevel);
                 fullExpTable[currentLv] = lastCumulativeExp;
-                // ★★★ 各レベルの経験値計算ログ (大量に出るので注意) ★★★
-                // if (currentLv % 100 === 0) console.log(`[leveling-calculator.js] Calculated Lv ${currentLv}: ${fullExpTable[currentLv]}`);
+                if (growthFactor > 0) {
+                    currentExpPerLevel = currentExpPerLevel * (1 + growthFactor);
+                }
             }
             lastProcessedLevel = endLv;
         });

@@ -55,7 +55,7 @@
                          {{ $jobName := index . "職業の名前" }}
                          {{ $jobRank := index . "職階" }}
                          {{ if $jobName }}
-                         <option value="{{ $jobName }}">{{ $jobName }} ({{ $jobRank }}{{ if ne $jobRank 0 }}次{{ end }})</option>
+                         <option value="{{ $jobName }}">{{ $jobName }} ({{ $jobRank }}{{ if ne $jobRank 0 }}次{{ end }} / マスターLv{{ index . "最大LV" }})</option>
                          {{ end }}
                     {{ end }}
                 </select>

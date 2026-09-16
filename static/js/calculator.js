@@ -94,9 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     const div = document.createElement('div');
                     div.className = 'job-selection-item'; // CSS用クラス
                     const rankDisplay = `${jobRank}${jobRank == 0 ? '' : '次'}`; // 0次には「次」を付けない
+                    const maxLevel = job['最大LV'] || '?';
                     div.innerHTML = `
                         <input type="checkbox" id="${container.id}-${safeIdName}" data-job-name="${jobName}" ${isChecked ? 'checked' : ''}>
-                        <label for="${container.id}-${safeIdName}">${jobName} (${rankDisplay})</label>
+                        <label for="${container.id}-${safeIdName}">${jobName} <span style="color:#888;font-size:0.85em;">(${rankDisplay} / マスターLv${maxLevel})</span></label>
                     `;
                     // マスター済みリストのチェックボックスにイベントリスナー追加
                     if (listType === 'mastered') {
