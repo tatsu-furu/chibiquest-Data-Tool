@@ -192,20 +192,32 @@ document.addEventListener('DOMContentLoaded', function () {
         const totals = { hp: 0, mp: 0, atk: 0, mag: 0, lck: 0 };
         const rows = [];
 
+        // 平均 = (最大値 + 1) / 2, 合計 = 平均 × マスターLv
+        function statTotal(maxVal, masterLv) {
+            if (!maxVal || !masterLv) return 0;
+            return Math.floor((maxVal + 1) / 2 * masterLv);
+        }
+
         mastered.forEach(jobName => {
             const jobInfo = jobDataMap.get(jobName);
             if (!jobInfo) return;
-            const hp  = parseInt(jobInfo['最大HPアップ']) || 0;
-            const mp  = parseInt(jobInfo['最大MPアップ']) || 0;
-            const atk = parseInt(jobInfo['最大攻撃力アップ']) || 0;
-            const mag = parseInt(jobInfo['最大魔力アップ']) || 0;
-            const lck = parseInt(jobInfo['最大運アップ']) || 0;
+            const maxHp  = parseInt(jobInfo['最大HPアップ']) || 0;
+            const maxMp  = parseInt(jobInfo['最大MPアップ']) || 0;
+            const maxAtk = parseInt(jobInfo['最大攻撃力アップ']) || 0;
+            const maxMag = parseInt(jobInfo['最大魔力アップ']) || 0;
+            const maxLck = parseInt(jobInfo['最大運アップ']) || 0;
+            const masterLv = parseInt(jobInfo['最大LV']) || 0;
+            const hp  = statTotal(maxHp,  masterLv);
+            const mp  = statTotal(maxMp,  masterLv);
+            const atk = statTotal(maxAtk, masterLv);
+            const mag = statTotal(maxMag, masterLv);
+            const lck = statTotal(maxLck, masterLv);
             totals.hp += hp; totals.mp += mp; totals.atk += atk; totals.mag += mag; totals.lck += lck;
-            rows.push({ jobName, rank: parseInt(jobInfo['職階'], 10), hp, mp, atk, mag, lck });
+            rows.push({ jobName, rank: parseInt(jobInfo['職階'], 10), masterLv, maxHp, maxMp, maxAtk, maxMag, maxLck, hp, mp, atk, mag, lck });
         });
 
         rows.sort((a, b) => a.rank !== b.rank ? a.rank - b.rank : a.jobName.localeCompare(b.jobName, 'ja'));
-        info.textContent = `マスター済み ${mastered.size} 職業から集計`;
+        info.textContent = `マスター済み ${mastered.size} 職業から集計 ※ 平均値 = (最大上昇値 + 1) ÷ 2 × マスターLv で計算`;
 
         const maxVal = Math.max(totals.hp, totals.mp, totals.atk, totals.mag, totals.lck, 1);
         function bar(val, color) {
@@ -220,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let html = `<div style="display:flex; flex-wrap:wrap; gap:20px; margin-bottom:20px;">
             <div style="padding:16px 20px; background:#fdfaf4; border:1px solid #e0d8c0; border-radius:8px; min-width:280px;">
-                <h3 style="margin:0 0 14px; color:#8B4513; font-size:1em; border-bottom:2px solid #8B4513; padding-bottom:6px;">合計ステータス上昇値</h3>
+                <h3 style="margin:0 0 14px; color:#8B4513; font-size:1em; border-bottom:2px solid #8B4513; padding-bottom:6px;">期待ステータス合計値</h3>
                 <table style="border:none; width:auto; margin:0;">
                     <tr><td style="border:none; padding:2px 10px 2px 0; font-weight:bold; color:#c0392b;">最大HP</td><td style="border:none; padding:2px 0;">${bar(totals.hp, '#e74c3c')}</td></tr>
                     <tr><td style="border:none; padding:2px 10px 2px 0; font-weight:bold; color:#2980b9;">最大MP</td><td style="border:none; padding:2px 0;">${bar(totals.mp, '#3498db')}</td></tr>
@@ -231,40 +243,52 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         </div>
         <h3 style="margin-top:0;">職業別内訳 (${rows.length}職業)</h3>
+        <p style="font-size:0.82em; color:#888; margin-top:-10px;">各欄: 期待合計値 <small>（最大値/Lv）</small> ─ 平均 = (最大 + 1) ÷ 2 × マスターLv</p>
         <div style="max-height:420px; overflow-y:auto; border:1px solid #e0d8c0; border-radius:4px;">
         <table style="width:100%; border-collapse:collapse; font-size:0.88em; margin:0;">
             <thead><tr style="background:#8B4513; color:white; position:sticky; top:0; z-index:1;">
                 <th style="padding:7px 10px; text-align:left; border:none;">職業名</th>
-                <th style="padding:7px 10px; text-align:center; border:none; width:60px;">職次</th>
-                <th style="padding:7px 10px; text-align:center; border:none; width:55px; color:#ffaaaa;">HP↑</th>
-                <th style="padding:7px 10px; text-align:center; border:none; width:55px; color:#aad4ff;">MP↑</th>
-                <th style="padding:7px 10px; text-align:center; border:none; width:55px; color:#ffccaa;">攻↑</th>
-                <th style="padding:7px 10px; text-align:center; border:none; width:55px; color:#ddaaff;">魔↑</th>
-                <th style="padding:7px 10px; text-align:center; border:none; width:55px; color:#aaffcc;">運↑</th>
+                <th style="padding:7px 10px; text-align:center; border:none; width:55px;">職次</th>
+                <th style="padding:7px 10px; text-align:center; border:none; width:65px;">MsLv</th>
+                <th style="padding:7px 10px; text-align:center; border:none; width:65px; color:#ffaaaa;">HP</th>
+                <th style="padding:7px 10px; text-align:center; border:none; width:65px; color:#aad4ff;">MP</th>
+                <th style="padding:7px 10px; text-align:center; border:none; width:65px; color:#ffccaa;">攻撃</th>
+                <th style="padding:7px 10px; text-align:center; border:none; width:65px; color:#ddaaff;">魔力</th>
+                <th style="padding:7px 10px; text-align:center; border:none; width:65px; color:#aaffcc;">運</th>
             </tr></thead><tbody>`;
+
+        function statCell(total, maxVal, textColor) {
+            if (!total && !maxVal) return `<td style="padding:4px 8px; text-align:center; border:none; color:#ccc;">-</td>`;
+            return `<td style="padding:4px 8px; text-align:center; border:none; color:${textColor}; line-height:1.2;">
+                <span style="font-weight:bold;">${total}</span>
+                <br><span style="font-size:0.78em; color:#aaa;">(${maxVal}/Lv)</span>
+            </td>`;
+        }
 
         rows.forEach((r, idx) => {
             const bg = idx % 2 === 0 ? '#fdfaf4' : '#f5f0e8';
             const rankLabel = r.rank === 0 ? 'ア' : r.rank + '次';
             html += `<tr style="background:${bg};">
                 <td style="padding:4px 10px; border:none;">${r.jobName}</td>
-                <td style="padding:4px 10px; text-align:center; border:none; color:#888;">${rankLabel}</td>
-                <td style="padding:4px 10px; text-align:center; border:none; color:#c0392b;">${r.hp || '-'}</td>
-                <td style="padding:4px 10px; text-align:center; border:none; color:#2980b9;">${r.mp || '-'}</td>
-                <td style="padding:4px 10px; text-align:center; border:none; color:#d35400;">${r.atk || '-'}</td>
-                <td style="padding:4px 10px; text-align:center; border:none; color:#8e44ad;">${r.mag || '-'}</td>
-                <td style="padding:4px 10px; text-align:center; border:none; color:#27ae60;">${r.lck || '-'}</td>
+                <td style="padding:4px 8px; text-align:center; border:none; color:#888;">${rankLabel}</td>
+                <td style="padding:4px 8px; text-align:center; border:none; color:#888;">${r.masterLv}</td>
+                ${statCell(r.hp,  r.maxHp,  '#c0392b')}
+                ${statCell(r.mp,  r.maxMp,  '#2980b9')}
+                ${statCell(r.atk, r.maxAtk, '#d35400')}
+                ${statCell(r.mag, r.maxMag, '#8e44ad')}
+                ${statCell(r.lck, r.maxLck, '#27ae60')}
             </tr>`;
         });
 
         html += `<tr style="background:#f0e8d8; font-weight:bold; position:sticky; bottom:0;">
-            <td style="padding:6px 10px; border:none;">合計</td>
+            <td style="padding:6px 10px; border:none;">合計 (${rows.length}職)</td>
             <td style="border:none;"></td>
-            <td style="padding:6px 10px; text-align:center; border:none; color:#c0392b;">${totals.hp}</td>
-            <td style="padding:6px 10px; text-align:center; border:none; color:#2980b9;">${totals.mp}</td>
-            <td style="padding:6px 10px; text-align:center; border:none; color:#d35400;">${totals.atk}</td>
-            <td style="padding:6px 10px; text-align:center; border:none; color:#8e44ad;">${totals.mag}</td>
-            <td style="padding:6px 10px; text-align:center; border:none; color:#27ae60;">${totals.lck}</td>
+            <td style="border:none;"></td>
+            <td style="padding:6px 10px; text-align:center; border:none; color:#c0392b; font-size:1.05em;">${totals.hp.toLocaleString()}</td>
+            <td style="padding:6px 10px; text-align:center; border:none; color:#2980b9; font-size:1.05em;">${totals.mp.toLocaleString()}</td>
+            <td style="padding:6px 10px; text-align:center; border:none; color:#d35400; font-size:1.05em;">${totals.atk.toLocaleString()}</td>
+            <td style="padding:6px 10px; text-align:center; border:none; color:#8e44ad; font-size:1.05em;">${totals.mag.toLocaleString()}</td>
+            <td style="padding:6px 10px; text-align:center; border:none; color:#27ae60; font-size:1.05em;">${totals.lck.toLocaleString()}</td>
         </tr></tbody></table></div>`;
 
         output.innerHTML = html;
