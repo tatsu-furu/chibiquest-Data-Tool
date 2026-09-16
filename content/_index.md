@@ -21,6 +21,8 @@ title: "チビクエスト Data & Tool へようこそ"
 > モチベがなくなったら更新止まるかも、最悪サイトごと消えるかもです笑（ドメイン維持費もあるので…）
 > 「役に立ったな〜」と思ったら、**左下のKo-fiボタン**から少額支援 or **ゲーム内でたすけてもらえると**めちゃくちゃ助かります🙏 いつもありがとうございます！
 
+<a href="https://chibiquest.net/bsta.php?bnum2=3-s4r4&play_id=b047b01e9f8409390bf5e880f9f9fd30&num=s4r4&id=jUC9kHiOkS&zkw=&sma=" target="_blank" rel="noopener" style="display:inline-block; margin-top:6px; padding:8px 18px; background:#8B4513; color:white; border-radius:6px; text-decoration:none; font-weight:bold;">🎮 ゲーム内で管理人を見る</a>
+
 ---
 
 ## コンテンツ一覧
