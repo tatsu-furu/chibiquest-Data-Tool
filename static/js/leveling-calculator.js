@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // ★★★ DOMContentLoaded 発火確認 ★★★
     console.log('[leveling-calculator.js] DOMContentLoaded event fired.');
 
-    // --- 定数 ---
-    const COST_PER_LEVELING_SESSION = 1900; // 1回の費用
-
     // --- 獲得経験値設定マップ (ユーザー指定に基づく) ---
     const expSettings = {
         "default": 700000000*4, // 通常 (28億)
@@ -426,6 +423,8 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('[leveling-calculator.js] sessionCountEl:', sessionCountEl ? 'Found' : 'NOT FOUND');
     const expSettingSelectEl = document.getElementById('expSettingSelect');
     console.log('[leveling-calculator.js] expSettingSelectEl:', expSettingSelectEl ? 'Found' : 'NOT FOUND');
+    const customExpPerSessionEl = document.getElementById('customExpPerSession');
+    const costPerSessionEl = document.getElementById('costPerSession');
     const calculateButton = document.getElementById('calculateButton');
     console.log('[leveling-calculator.js] calculateButton:', calculateButton ? 'Found' : 'NOT FOUND');
     const resultSummaryEl = document.getElementById('resultSummary');
@@ -523,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return Math.max(1, currentLevel);
     }
 
-    function calculateLevelingToTargetLevel(startLevel, targetLevel, startLevelCurrentExp = 0, effectiveExpPerSession) {
+    function calculateLevelingToTargetLevel(startLevel, targetLevel, startLevelCurrentExp = 0, effectiveExpPerSession, costPerSession = 0) {
         // ★★★ calculateLevelingToTargetLevel 呼び出しログ ★★★
         console.log(`[leveling-calculator.js] calculateLevelingToTargetLevel: StartLv=${startLevel}, TargetLv=${targetLevel}, StartExp=${startLevelCurrentExp}, Exp/Session=${effectiveExpPerSession}`);
         let currentTotalExpFromLv1 = getExpForTargetLevel(startLevel) + startLevelCurrentExp;
@@ -553,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return { error: `計算回数が上限(${MAX_SESSIONS.toLocaleString()})に達しました。条件を見直してください。` };
             }
             sessions++;
-            totalCost += COST_PER_LEVELING_SESSION;
+            totalCost += costPerSession;
             currentTotalExpFromLv1 += effectiveExpPerSession;
             currentLevelSim = getLevelFromExp(currentTotalExpFromLv1);
 
@@ -577,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return { totalSessions: sessions, totalCost: totalCost, finalLevel: finalLevelReached, finalExpInLevel: finalExpInLevel, log: logData };
     }
 
-    function calculateLevelingBySessionCount(startLevel, numSessions, startLevelCurrentExp = 0, effectiveExpPerSession) {
+    function calculateLevelingBySessionCount(startLevel, numSessions, startLevelCurrentExp = 0, effectiveExpPerSession, costPerSession = 0) {
         // ★★★ calculateLevelingBySessionCount 呼び出しログ ★★★
         console.log(`[leveling-calculator.js] calculateLevelingBySessionCount: StartLv=${startLevel}, NumSessions=${numSessions}, StartExp=${startLevelCurrentExp}, Exp/Session=${effectiveExpPerSession}`);
         let currentTotalExpFromLv1 = getExpForTargetLevel(startLevel) + startLevelCurrentExp;
@@ -594,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let previousLevelSim = startLevel;
 
         for (let i = 0; i < numSessions; i++) {
-            totalCost += COST_PER_LEVELING_SESSION;
+            totalCost += costPerSession;
             currentTotalExpFromLv1 += effectiveExpPerSession;
             currentLevelSim = getLevelFromExp(currentTotalExpFromLv1);
             logData.push({
@@ -621,11 +620,13 @@ document.addEventListener('DOMContentLoaded', function () {
             try { // ★★★ 計算処理全体をtry...catchで囲む ★★★
                 const startLevel = parseInt(currentLevelEl.value);
                 const startExp = parseInt(currentExpEl.value) || 0;
-                const selectedExpKey = expSettingSelectEl.value;
-                const effectiveExpPerSession = expSettings[selectedExpKey] || expSettings["default"];
+                const costPerSession = parseInt(costPerSessionEl?.value) || 0;
+                const customExpVal = parseInt(customExpPerSessionEl?.value);
+                const effectiveExpPerSession = (!isNaN(customExpVal) && customExpVal > 0)
+                    ? customExpVal
+                    : (expSettings[expSettingSelectEl.value] || expSettings["default"]);
 
-                // ★★★ 入力値ログ ★★★
-                console.log(`[leveling-calculator.js] Inputs - StartLv: ${startLevel}, StartExp: ${startExp}, ExpKey: ${selectedExpKey}, EffectiveExp: ${effectiveExpPerSession}`);
+                console.log(`[leveling-calculator.js] Inputs - StartLv: ${startLevel}, StartExp: ${startExp}, EffectiveExp: ${effectiveExpPerSession}, Cost: ${costPerSession}`);
 
                 if (isNaN(startLevel) || startLevel < 1) { alert("現在のレベルは1以上で正しく入力してください。"); return; }
                 if (isNaN(startExp) || startExp < 0) { alert("現在のレベルでの獲得済み経験値は0以上で正しく入力してください。"); return; }
@@ -644,11 +645,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         alert("目標レベルは現在のレベルより高く設定するか、現在のレベルで未カンストの場合に設定してください。");
                         return;
                     }
-                    result = calculateLevelingToTargetLevel(startLevel, targetLevel, startExp, effectiveExpPerSession);
+                    result = calculateLevelingToTargetLevel(startLevel, targetLevel, startExp, effectiveExpPerSession, costPerSession);
                 } else { // 'session' mode
                     const numSessions = parseInt(sessionCountEl.value);
                     if (isNaN(numSessions) || numSessions < 1) { alert("レベリング回数は1以上で正しく入力してください。"); return; }
-                    result = calculateLevelingBySessionCount(startLevel, numSessions, startExp, effectiveExpPerSession);
+                    result = calculateLevelingBySessionCount(startLevel, numSessions, startExp, effectiveExpPerSession, costPerSession);
                 }
                 // ★★★ 計算結果ログ ★★★
                 console.log('[leveling-calculator.js] Calculation result:', JSON.parse(JSON.stringify(result))); // deep copy for logging
@@ -688,10 +689,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
+        const costLine = (result.totalCost > 0)
+            ? `<p>総費用: <strong>${result.totalCost.toLocaleString()} G</strong></p>`
+            : '';
         resultSummaryEl.innerHTML = `
-            <p>総レベリング回数: ${result.totalSessions.toLocaleString()} 回</p>
-            <p>総費用: ${result.totalCost.toLocaleString()} G</p>
-            <p>最終到達レベル: ${result.finalLevel.toLocaleString()}</p>
+            <p>総レベリング回数: <strong>${result.totalSessions.toLocaleString()} 回</strong></p>
+            ${costLine}
+            <p>最終到達レベル: <strong>${result.finalLevel.toLocaleString()}</strong></p>
             <p>最終レベルでの獲得経験値: ${(result.finalExpInLevel !== undefined && isFinite(result.finalExpInLevel) ? result.finalExpInLevel : 0).toLocaleString()}</p>
         `;
 

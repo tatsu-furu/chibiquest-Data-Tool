@@ -16,6 +16,10 @@
             <label for="currentExp" class="form-label">現在のレベルでの獲得済み経験値 (任意):</label>
             <input type="number" id="currentExp" class="form-control" value="0" min="0">
           </div>
+          <div class="mb-3">
+            <label for="costPerSession" class="form-label">1回あたりの費用 (任意):</label>
+            <input type="number" id="costPerSession" class="form-control" min="0" placeholder="未入力なら費用は計算しません">
+          </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
@@ -26,14 +30,23 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="expSettingSelect" class="form-label">使用予定倍アイテム（4相互での獲得経験値目安）:</label> <select id="expSettingSelect" class="form-select"> <option value="10x">10倍 (28億)</option> <option value="15x">15倍 (42億)</option> <option value="20x">20倍 (56億)</option> </select>
+            <label for="expSettingSelect" class="form-label">倍アイテム目安（4相互）:</label>
+            <select id="expSettingSelect" class="form-select">
+              <option value="10x">10倍 (28億)</option>
+              <option value="15x">15倍 (42億)</option>
+              <option value="20x">20倍 (56億)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="customExpPerSession" class="form-label">獲得経験値を直接入力 (任意・優先):</label>
+            <input type="number" id="customExpPerSession" class="form-control" min="1" placeholder="入力時はこちらを優先使用">
           </div>
         </div>
       </div>
 
       <div class="mb-3" id="targetLevelGroup">
         <label for="targetLevel" class="form-label">目標レベル:</label>
-        <input type="number" id="targetLevel" class="form-control" value="100" min="1">
+        <input type="number" id="targetLevel" class="form-control" value="1000" min="1">
       </div>
       <div class="mb-3" id="sessionCountGroup" style="display: none;">
         <label for="sessionCount" class="form-label">レベリング回数:</label>
