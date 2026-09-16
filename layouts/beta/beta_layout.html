@@ -1,0 +1,83 @@
+{{ define "main" }}
+<div>
+    <h1>{{ .Title }} <span style="font-size:0.45em; color:#e83e8c; border:1px solid #e83e8c; padding:2px 8px; border-radius:12px; vertical-align:middle;">BETA</span></h1>
+    <p style="color:#888; margin-top:-0.5em;">{{ .Content }}</p>
+
+    {{/* タブバー */}}
+    <div class="beta-tab-bar">
+        <button class="beta-tab active" data-tab="roadmap">🗺️ 育成ロードマップ</button>
+        <button class="beta-tab" data-tab="stats">📊 ステータス合算</button>
+        <button class="beta-tab" data-tab="skills">🔍 スキル逆引き</button>
+    </div>
+
+    {{/* Tab 1: 育成ロードマップ */}}
+    <div id="beta-tab-roadmap" class="beta-tab-content">
+        <div class="tool-section">
+            <h2>🗺️ 育成ロードマップ</h2>
+            <p style="color:#666; font-size:0.9em;">目標職業を選択すると、マスターすべき前提職を順番に一覧表示します。マスター済み情報は「前提職計算ツール」と共有されます。</p>
+            <div style="display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap; margin-bottom:15px;">
+                <div>
+                    <label for="roadmap-target-job">目標職業:</label>
+                    <select id="roadmap-target-job" style="padding:6px 8px; border:1px solid #e0d8c0; border-radius:4px; background:white; min-width:200px;">
+                        <option value="">-- 選択してください --</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                    <button id="roadmap-generate-btn" class="bulk-check-button" style="padding:7px 16px; font-size:0.95em; background:#DAA520; color:#4a3f35; border-color:#c4921a; font-weight:bold;">ロードマップ生成</button>
+                    <button id="roadmap-csv-btn" class="bulk-check-button" style="display:none;">📥 CSVダウンロード</button>
+                </div>
+            </div>
+            <div id="roadmap-output"><p style="color:#aaa;">（職業を選択して生成ボタンを押してください）</p></div>
+        </div>
+    </div>
+
+    {{/* Tab 2: ステータス合算 */}}
+    <div id="beta-tab-stats" class="beta-tab-content" style="display:none;">
+        <div class="tool-section">
+            <h2>📊 ステータス合算</h2>
+            <p style="color:#666; font-size:0.9em;">「前提職計算ツール」でマスター済みに設定した職業の、ステータス上昇値合計を計算します。</p>
+            <div style="margin-bottom:15px;">
+                <button id="stats-load-btn" class="bulk-check-button" style="padding:7px 16px; font-size:0.95em; background:#DAA520; color:#4a3f35; border-color:#c4921a; font-weight:bold;">マスター済みを読み込んで計算</button>
+            </div>
+            <div id="stats-info" style="margin-bottom:10px; color:#888; font-size:0.9em;"></div>
+            <div id="stats-output"></div>
+        </div>
+    </div>
+
+    {{/* Tab 3: スキル逆引き */}}
+    <div id="beta-tab-skills" class="beta-tab-content" style="display:none;">
+        <div class="tool-section">
+            <h2>🔍 スキル逆引き</h2>
+            <p style="color:#666; font-size:0.9em;">スキル名で検索して、どの職業が習得できるかを探せます。</p>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:15px;">
+                <div style="flex:1 1 200px;">
+                    <label for="skill-search-input">スキル名検索:</label>
+                    <input type="text" id="skill-search-input" placeholder="例: ホイミ" style="width:100%; padding:7px 8px; border:1px solid #e0d8c0; border-radius:4px; box-sizing:border-box;">
+                </div>
+                <div style="flex:1 1 150px;">
+                    <label for="skill-rank-filter">職次絞込:</label>
+                    <select id="skill-rank-filter" style="width:100%; padding:7px 8px; border:1px solid #e0d8c0; border-radius:4px; background:white;">
+                        <option value="">全て</option>
+                        <option value="0">0次(アイテム職)</option>
+                        {{ range seq 9 }}<option value="{{.}}">{{.}}次</option>{{ end }}
+                    </select>
+                </div>
+            </div>
+            <div id="skills-output"><p style="color:#aaa;">（スキル名を入力すると検索結果が表示されます）</p></div>
+        </div>
+    </div>
+</div>
+
+{{/* データ埋め込み */}}
+<script>
+  const jsonString = `{{ .Site.Data.jobs | jsonify }}`;
+  var allJobData = []; var jobDataMap = new Map();
+  try {
+    allJobData = JSON.parse(jsonString);
+    if (Array.isArray(allJobData)) {
+      allJobData.forEach(job => { const n = job['職業の名前']; if (n) jobDataMap.set(n, job); });
+    } else { allJobData = []; }
+  } catch(e) { console.error('Beta: JSON parse error:', e); allJobData = []; }
+</script>
+<script src="/js/beta.js" defer></script>
+{{ end }}

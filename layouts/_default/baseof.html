@@ -53,7 +53,8 @@
             <a href="{{ "/jobs/" | relURL }}">職業DB</a> |
             <a href="{{ "/equipment/" | relURL }}">装備図鑑</a> |  {{/* ★装備図鑑のリンクを追加 */}}
             <a href="{{ "/tool/" | relURL }}">前提職計算</a> |
-            <a href="{{ "/leveling-calculator/" | relURL }}">レベリング計算</a>
+            <a href="{{ "/leveling-calculator/" | relURL }}">レベリング計算</a> |
+            <a href="{{ "/beta/" | relURL }}" style="color:#e83e8c;">β テスト</a>
         </nav>
         <hr>
     </header>
@@ -97,6 +98,10 @@
         {{/* Bootstrap JS (モーダル用) - ここで読み込むか、上記Essential JSに移動 */}}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
         <script src="{{ "/js/equipment-gallery.js" | relURL }}" defer></script>
+    {{ end }}
+
+    {{ if eq .Page.RelPermalink "/beta/" }}
+        <script src="{{ "/js/beta.js" | relURL }}" defer></script>
     {{ end }}
 
     {{/* contact.js */}}

@@ -453,6 +453,45 @@ label { // ラベル共通
     }
 }
 
+// --- ベータページ タブ ---
+.beta-tab-bar {
+    display: flex;
+    gap: 3px;
+    border-bottom: 2px solid $primary-color;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.beta-tab {
+    padding: 8px 18px;
+    background: lighten($bg-color, 1%);
+    border: 1px solid $border-color;
+    border-bottom: 2px solid $primary-color;
+    margin-bottom: -2px;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    font-size: 0.92em;
+    color: $text-color;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+        background: darken($bg-color, 4%);
+    }
+    &.active {
+        background: $primary-color;
+        color: white;
+        border-color: $primary-color;
+        font-weight: bold;
+    }
+}
+.beta-tab-content {
+    animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
 // Font Awesome を使用していない場合は、この部分は削除またはコメントアウト
 .external-link::after {
   content: " \f08e";
