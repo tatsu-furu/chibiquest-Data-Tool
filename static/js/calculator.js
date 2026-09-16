@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const jobListOutput = document.getElementById('required-jobs-output');
     const totalGrindOutput = document.getElementById('total-grind-output');
     const exportCsvButton = document.getElementById('export-csv-button');
+    const masteredAutoPrereqButton = document.getElementById('mastered-auto-prereq');
     let lastCalculationResult = null;
 
     // --- データチェック ---
@@ -162,6 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (masteredCheckAllButton) masteredCheckAllButton.addEventListener('click', () => setCheckAllMasteredVisible(true)); else console.error("Button #mastered-check-all not found.");
     if (masteredUncheckAllButton) masteredUncheckAllButton.addEventListener('click', () => setCheckAllMasteredVisible(false)); else console.error("Button #mastered-uncheck-all not found.");
     if (exportCsvButton) exportCsvButton.addEventListener('click', exportToCSV);
+    if (masteredAutoPrereqButton) masteredAutoPrereqButton.addEventListener('click', autoAddPrereqs);
 
 
     // --- 計算実行関数 (handleCalculation) ---
@@ -318,6 +320,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         jobListOutput.appendChild(flowWrap);
+    }
+
+    // --- 前提職を自動チェック（逆算） ---
+    function autoAddPrereqs() {
+        if (masteredJobsSet.size === 0) {
+            alert('まずマスター済み職業にチェックを入れてください。');
+            return;
+        }
+
+        const beforeSize = masteredJobsSet.size;
+
+        function addPrereqsRecursive(jobName, depth) {
+            if (depth > 50 || !jobName || !jobDataMap.has(jobName)) return;
+            if (masteredJobsSet.has(jobName)) return;
+            const jobInfo = jobDataMap.get(jobName);
+            const rank = jobInfo['職階'];
+            const prereqOrItem = jobInfo['前提/アイテム'] || '';
+            masteredJobsSet.add(jobName);
+            if (rank === 0 || rank === '0' || prereqOrItem === 'なし' || prereqOrItem === '') return;
+            prereqOrItem.split(',').map(n => n.trim()).filter(n => n && n !== '?' && n !== '[[]]').forEach(p => {
+                if (jobDataMap.has(p)) addPrereqsRecursive(p, depth + 1);
+            });
+        }
+
+        // チェック済みの全ジョブの前提職を再帰的に追加
+        Array.from(masteredJobsSet).forEach(jobName => {
+            const jobInfo = jobDataMap.get(jobName);
+            if (!jobInfo) return;
+            const rank = jobInfo['職階'];
+            const prereqOrItem = jobInfo['前提/アイテム'] || '';
+            if (rank === 0 || rank === '0' || prereqOrItem === 'なし' || prereqOrItem === '') return;
+            prereqOrItem.split(',').map(n => n.trim()).filter(n => n && n !== '?' && n !== '[[]]').forEach(p => {
+                if (jobDataMap.has(p)) addPrereqsRecursive(p, 0);
+            });
+        });
+
+        const addedCount = masteredJobsSet.size - beforeSize;
+        saveMasteredJobs(masteredJobsSet);
+        renderCheckboxList(masteredCheckboxContainer, masteredRankFilter, masteredNameFilter, 'mastered');
+        if (addedCount > 0) {
+            alert(`${addedCount}件の前提職をマスター済みに追加しました。`);
+        } else {
+            alert('追加できる前提職がありませんでした。（既に全てマスター済みか、前提職なし）');
+        }
     }
 
     // --- CSVエクスポート ---
