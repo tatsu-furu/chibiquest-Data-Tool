@@ -20,7 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentJobLevelInput = document.getElementById('current-job-level');
     const calculateButton = document.getElementById('calculate-button');
     const jobListOutput = document.getElementById('required-jobs-output');
-    const totalGrindOutput = document.getElementById('total-grind-output'); // 最終的な必要レベル合計表示用
+    const totalGrindOutput = document.getElementById('total-grind-output');
+    const exportCsvButton = document.getElementById('export-csv-button');
+    let lastCalculationResult = null;
 
     // --- データチェック ---
     if (typeof allJobData === 'undefined' || !Array.isArray(allJobData) || allJobData.length === 0 || typeof jobDataMap === 'undefined' || jobDataMap.size === 0) {
@@ -159,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (targetNameFilter) targetNameFilter.addEventListener('input', () => renderCheckboxList(targetCheckboxContainer, targetRankFilter, targetNameFilter, 'target')); else console.error('Target name filter not found.');
     if (masteredCheckAllButton) masteredCheckAllButton.addEventListener('click', () => setCheckAllMasteredVisible(true)); else console.error("Button #mastered-check-all not found.");
     if (masteredUncheckAllButton) masteredUncheckAllButton.addEventListener('click', () => setCheckAllMasteredVisible(false)); else console.error("Button #mastered-uncheck-all not found.");
+    if (exportCsvButton) exportCsvButton.addEventListener('click', exportToCSV);
 
 
     // --- 計算実行関数 (handleCalculation) ---
@@ -220,39 +223,129 @@ document.addEventListener('DOMContentLoaded', function() {
         const actualNeededJobsSet = new Set([...targetPrereqsSet].filter(jobName => !currentMasteredSet.has(jobName)));
 
         // 5. 結果表示
-        if(jobListOutput) jobListOutput.innerHTML = '';
         if(totalGrindOutput) totalGrindOutput.textContent = '0';
 
-        if (jobListOutput) {
-            // 5a. 結果リスト用配列をソート
-            let sortedNeededJobsArray = Array.from(actualNeededJobsSet);
-            sortedNeededJobsArray.sort((a, b) => {
-                const jobA = jobDataMap.get(a); const jobB = jobDataMap.get(b); if (!jobA || !jobB) return 0;
-                const rankA = parseInt(jobA['職階'], 10); const rankB = parseInt(jobB['職階'], 10);
-                if (isNaN(rankA) || isNaN(rankB)) return 0; if (rankA !== rankB) return rankA - rankB;
-                return a.localeCompare(b, 'ja');
-            });
+        // 5a. 結果リスト用配列をソート
+        let sortedNeededJobsArray = Array.from(actualNeededJobsSet);
+        sortedNeededJobsArray.sort((a, b) => {
+            const jobA = jobDataMap.get(a); const jobB = jobDataMap.get(b); if (!jobA || !jobB) return 0;
+            const rankA = parseInt(jobA['職階'], 10); const rankB = parseInt(jobB['職階'], 10);
+            if (isNaN(rankA) || isNaN(rankB)) return 0; if (rankA !== rankB) return rankA - rankB;
+            return a.localeCompare(b, 'ja');
+        });
 
-            // 5b. リスト項目(li)を生成（アイテム職のアイテム名表示含む）
-            if (sortedNeededJobsArray.length === 0 && selectedTargetJobNames.length > 0) {
-                 const li = document.createElement('li'); li.textContent = '目標達成に必要な職業は全てマスター済みです！'; jobListOutput.appendChild(li);
-            } else {
-                sortedNeededJobsArray.forEach(jobName => {
-                    const li = document.createElement('li'); const jobInfo = jobDataMap.get(jobName);
-                    if (jobInfo) {
-                        const rank = parseInt(jobInfo['職階'], 10);
-                        li.classList.add(`rank-${rank}`); // CSS用クラス追加
-                        if (!isNaN(rank) && rank === 0) { const item = jobInfo['前提/アイテム'] || '不明'; li.textContent = `${jobName} (要: ${item})`; }
-                        else { li.textContent = jobName; }
-                    } else { li.textContent = `${jobName} (?)`; }
-                    jobListOutput.appendChild(li);
-                });
-            }
-        }
-        // 5c. 合計レベル表示
+        lastCalculationResult = sortedNeededJobsArray;
+
+        // 5b. フローチャート表示
+        renderJobFlowChart(sortedNeededJobsArray, selectedTargetJobNames.length > 0);
+
+        // 5c. 合計レベル表示 & CSVボタン表示
         if (totalGrindOutput) totalGrindOutput.textContent = totalGrindNeeded;
+        if (exportCsvButton) exportCsvButton.style.display = sortedNeededJobsArray.length > 0 ? '' : 'none';
         console.log('Calculation finished.');
     } // handleCalculation 関数の終わり
+
+    // --- 職次フローチャート表示 ---
+    function renderJobFlowChart(sortedJobs, hasTarget) {
+        if (!jobListOutput) return;
+        jobListOutput.innerHTML = '';
+
+        if (sortedJobs.length === 0) {
+            jobListOutput.innerHTML = hasTarget
+                ? '<p style="color:green; font-weight:bold;">🎉 目標達成に必要な職業は全てマスター済みです！</p>'
+                : '<p style="color:#aaa;">（計算を実行すると結果が表示されます）</p>';
+            return;
+        }
+
+        // 職次ごとにグループ化
+        const rankGroups = new Map();
+        sortedJobs.forEach(jobName => {
+            const jobInfo = jobDataMap.get(jobName);
+            if (!jobInfo) return;
+            const rank = parseInt(jobInfo['職階'], 10);
+            if (!rankGroups.has(rank)) rankGroups.set(rank, []);
+            rankGroups.get(rank).push(jobName);
+        });
+        const sortedRanks = Array.from(rankGroups.keys()).sort((a, b) => a - b);
+
+        // カラーマップ（職次ごとにヘッダー色を変える）
+        const rankColors = ['#6c757d','#0d6efd','#6610f2','#0dcaf0','#198754','#ffc107','#fd7e14','#dc3545','#20c997','#6f42c1','#d63384','#495057'];
+
+        const flowWrap = document.createElement('div');
+        flowWrap.style.cssText = 'display:flex; flex-wrap:nowrap; gap:0; overflow-x:auto; padding:8px 0 16px; align-items:flex-start;';
+
+        sortedRanks.forEach((rank, idx) => {
+            if (idx > 0) {
+                const arrow = document.createElement('div');
+                arrow.style.cssText = 'display:flex; align-items:flex-start; padding:28px 4px 0; font-size:1.4em; color:#adb5bd; flex-shrink:0;';
+                arrow.textContent = '→';
+                flowWrap.appendChild(arrow);
+            }
+
+            const color = rankColors[rank % rankColors.length];
+            const rankLabel = rank === 0 ? 'アイテム職' : `${rank}次職`;
+            const jobs = rankGroups.get(rank);
+
+            const card = document.createElement('div');
+            card.style.cssText = `flex-shrink:0; min-width:110px; max-width:155px; border:1px solid #dee2e6; border-radius:6px; overflow:hidden;`;
+
+            const header = document.createElement('div');
+            header.style.cssText = `background:${color}; color:#fff; padding:5px 8px; font-size:0.82em; font-weight:bold; text-align:center;`;
+            header.textContent = `${rankLabel}  (${jobs.length}件)`;
+            card.appendChild(header);
+
+            const body = document.createElement('div');
+            body.style.cssText = 'padding:4px 6px;';
+
+            jobs.forEach(jobName => {
+                const jobInfo = jobDataMap.get(jobName);
+                const item = document.createElement('div');
+                item.style.cssText = 'padding:3px 2px; font-size:0.82em; border-bottom:1px solid #f0f0f0; line-height:1.3;';
+                if (jobInfo && parseInt(jobInfo['職階'], 10) === 0) {
+                    const prereq = jobInfo['前提/アイテム'] || '不明';
+                    item.innerHTML = `${jobName}<br><span style="color:#aaa;font-size:0.85em;">要: ${prereq}</span>`;
+                } else if (jobInfo) {
+                    const maxLv = jobInfo['最大LV'] || '?';
+                    item.innerHTML = `${jobName}<br><span style="color:#aaa;font-size:0.85em;">マスターLv${maxLv}</span>`;
+                } else {
+                    item.textContent = jobName;
+                }
+                body.appendChild(item);
+            });
+
+            card.appendChild(body);
+            flowWrap.appendChild(card);
+        });
+
+        jobListOutput.appendChild(flowWrap);
+    }
+
+    // --- CSVエクスポート ---
+    function exportToCSV() {
+        if (!lastCalculationResult || lastCalculationResult.length === 0) {
+            alert('先に計算を実行してください。');
+            return;
+        }
+        const header = ['職階', '職業名', 'マスターLv', '前提/アイテム'];
+        const rows = lastCalculationResult.map(jobName => {
+            const jobInfo = jobDataMap.get(jobName);
+            if (!jobInfo) return ['-', jobName, '-', '-'];
+            const rank = jobInfo['職階'];
+            const rankLabel = (rank === 0 || rank === '0') ? '0次(アイテム職)' : `${rank}次`;
+            const maxLv = jobInfo['最大LV'] || '-';
+            const prereq = jobInfo['前提/アイテム'] || '-';
+            return [rankLabel, jobName, maxLv, prereq];
+        });
+        const csvContent = [header, ...rows]
+            .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+        const bom = '﻿';
+        const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'required_jobs.csv'; a.click();
+        URL.revokeObjectURL(url);
+    }
 
     // --- 初期表示 ---
     // ページ読み込み時に両方のリストを初回描画

@@ -1,11 +1,10 @@
-{{/* ファイルパス: layouts/_default/tool.html (最終版v3 - フィルタに0次追加) */}}
 {{ define "main" }}
 <main>
     <h1>{{ .Title }}</h1>
     <p>{{ .Content }}</p>
     <hr>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 20px;">
 
         {{/* 0. マスター済み職業選択エリア */}}
         <div class="tool-section" style="flex: 1 1 300px;">
@@ -13,8 +12,8 @@
             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
                  <div style="flex: 1 1 120px;"><label for="mastered-rank-filter-select">職階絞込:</label>
                      <select id="mastered-rank-filter-select" style="width: 100%; padding: 5px;">
-                         <option value="">全て表示</option> {{/* ★ Value を "" に */}}
-                         <option value="0">0次職(アイテム職)</option> {{/* ★ 0次職追加 */}}
+                         <option value="">全て表示</option>
+                         <option value="0">0次職(アイテム職)</option>
                          {{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}
                      </select>
                  </div>
@@ -34,8 +33,7 @@
              <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
                  <div style="flex: 1 1 120px;"><label for="target-rank-filter-select">職階絞込:</label>
                      <select id="target-rank-filter-select" style="width: 100%; padding: 5px;">
-                         <option value="">全て表示 (アイテム職除く)</option> {{/* ★ Value を "" に */}}
-                         {{/* 0次職は表示しない */}}
+                         <option value="">全て表示 (アイテム職除く)</option>
                          {{range seq 9}}<option value="{{.}}">{{.}}次</option>{{end}}
                      </select>
                  </div>
@@ -44,8 +42,8 @@
             <div id="target-job-checkbox-list" style="max-height: 400px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 10px;"><p>読み込み中...</p></div>
         </div>
 
-        {{/* 2&3. 入力と結果エリア */}}
-        <div class="tool-section" style="flex: 1 1 300px;">
+        {{/* 2. 現在の職業とレベル */}}
+        <div class="tool-section" style="flex: 1 1 280px;">
             <h2>2. 現在の職業とレベル</h2>
             <div style="margin-bottom: 10px;">
                 <label for="current-job-select" style="display: block; margin-bottom: 2px;">現在の職業:</label>
@@ -60,29 +58,31 @@
                     {{ end }}
                 </select>
             </div>
-            <div>
+            <div style="margin-bottom: 15px;">
                 <label for="current-job-level" style="display: block; margin-bottom: 2px;">その職業の現在のレベル:</label>
                 <input type="number" id="current-job-level" value="1" min="1" style="width: 80px; padding: 5px;">
             </div>
-            <br>
-            <button id="calculate-button" style="padding: 10px 15px; font-size: 16px;">計算実行</button>
-            <br><br>
-            <h2>3. 計算結果</h2>
-            <div>
-                <h3><span style="color:#dc3545;">残り</span> 必要職業リスト <small>(職次順)</small>:</h3> {{/* ラベル変更 */}}
-                <ul id="required-jobs-output" style="max-height: 150px; overflow-y: auto; border: 1px solid #eee; padding: 10px 10px 10px 20px; list-style: disc; margin-left: 0; background-color: #f8f9fa; border-radius: 4px;">
-                    <li>（マスター済みを除くリスト）</li>
-                </ul>
-            </div>
-            <div>
-                 <h3><span style="color:#dc3545;">⇒</span> これから必要な<span style="font-weight:bold;">総レベル数:</span></h3>
-                 <p id="total-grind-output" style="font-size: 1.3em; font-weight: bold; color: #dc3545; margin-top: -0.5em;">0</p>
-                 <small>（現在の職業のマスターに必要なLv + 他の必要前提職のマスターLv）</small>
-            </div>
+            <button id="calculate-button" style="padding: 10px 20px; font-size: 16px; width: 95%;">計算実行</button>
         </div>
     </div>
 
-    {{/* データ埋め込み & JS読み込み (変更なし) */}}
+    {{/* 3. 計算結果 (フルワイド) */}}
+    <div class="tool-section">
+        <div style="display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap; margin-bottom: 6px;">
+            <h2 style="margin: 0;">3. 計算結果</h2>
+            <div>
+                <span style="color:#dc3545; font-weight:bold;">⇒ 必要総レベル数: </span>
+                <span id="total-grind-output" style="font-size:1.4em; font-weight:bold; color:#dc3545;">-</span>
+            </div>
+            <button id="export-csv-button" class="bulk-check-button" style="display:none;">📥 CSVエクスポート</button>
+        </div>
+        <small style="color:#666;">（現在の職業のマスターに必要なLv + 他の必要前提職のマスターLv。マスター済みは除く）</small>
+        <div id="required-jobs-output" style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #eee;">
+            <p style="color:#aaa;">（計算を実行すると結果が表示されます）</p>
+        </div>
+    </div>
+
+    {{/* データ埋め込み & JS読み込み */}}
     <script>
       const jsonString = `{{ .Site.Data.jobs | jsonify }}`;
       var allJobData = []; var jobDataMap = new Map();
